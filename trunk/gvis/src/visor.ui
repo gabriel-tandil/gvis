@@ -342,58 +342,55 @@
   <object class="GtkWindow" id="ventanaCabecera">
     <property name="title" translatable="yes">Cabecera</property>
     <child>
-      <object class="GtkVPaned" id="vpaned1">
+      <object class="GtkHPaned" id="hpaned2">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <child>
           <object class="GtkTable" id="table2">
             <property name="visible">True</property>
-            <property name="n_rows">3</property>
-            <property name="n_columns">5</property>
+            <property name="n_rows">2</property>
+            <property name="n_columns">2</property>
             <child>
-              <placeholder/>
+              <object class="GtkEntry" id="fecha">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Fecha</property>
+              </object>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkLabel" id="label2">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Bandas</property>
+              </object>
+              <packing>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
+              <object class="GtkEntry" id="bandas">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -403,9 +400,13 @@
         </child>
         <child>
           <object class="GtkTextView" id="textoCabecera">
+            <property name="width_request">600</property>
+            <property name="height_request">500</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="editable">False</property>
+            <property name="wrap_mode">char</property>
+            <property name="cursor_visible">False</property>
           </object>
           <packing>
             <property name="resize">True</property>
