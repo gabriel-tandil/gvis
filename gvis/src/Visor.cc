@@ -28,7 +28,6 @@ Controlador("visor")
     builder->get_widget("verCabecera", verCabecera);
     builder->get_widget("configFalsoColor", configFalsoColor);
     builder->get_widget("ventanaCabecera", ventanaCabecera);
-    builder->get_widget("textoCabecera", textoCabecera);
  //   builder->get_widget("menuEmergenteDibujo",menuEmergenteDibujo);
     scrollHorizontal->signal_change_value().connect(sigc::mem_fun(*this, &Visor::on_scrollHorizontal_change));
     ventana->signal_show().connect(sigc::mem_fun(*this, &Visor::on_ventana_show));
@@ -102,9 +101,18 @@ void Visor::on_configFalsoColor_clik()
 
 void Visor::on_verCabecera_clik()
   {
+  Gtk::TextView* textoCabecera;
+  Gtk::Entry* bandas;
+  Gtk::Entry* fecha;
+  builder->get_widget("bandas", bandas);
+  builder->get_widget("fecha", fecha);
+  builder->get_widget("textoCabecera", textoCabecera);
+
   Glib::RefPtr<Gtk::TextBuffer> buffer= textoCabecera->get_buffer();
 
-  buffer->set_text(imagen->cabecera->getBandasPresentes());
+  buffer->set_text(imagen->cabecera->getTexto().substr(0,imagen->cabecera->getTexto().length()-1));
+  bandas->set_text(imagen->cabecera->getBandasPresentes());
+  fecha->set_text(imagen->cabecera->getFecha().format_string("%x"));
   ventanaCabecera->show();
   }
 

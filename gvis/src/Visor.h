@@ -58,7 +58,6 @@ public:
   Gtk::HScrollbar* scrollHorizontal;
   Gtk::DrawingArea* dibujo;
   Gtk::Window* ventanaCabecera;
-  Gtk::TextView* textoCabecera;
   PantallaCapas* pantallaCapas;
   PantallaFalsoColor* pantallaFalsoColor;
 
