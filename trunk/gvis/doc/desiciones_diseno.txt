@@ -1,0 +1,11 @@
+desiciones_diseno.txt
+
+ Created on: 04/04/2010
+     Author: gabriel
+
+Interfaz de usuario
+-------------------
+
+Cada ventana con  funcionalidad tiene el concepto de "Controlador", no use herencia desde Gtk::Window ya que no busco cambiar la funcionalidad provista.
+Se separo la definicion de la interfaz de usuario en distintos archivos para encapsular y ordenar, y no permitur violaciones de acceso a componentes de una ventana desde otra. 
+
