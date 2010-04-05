@@ -1,20 +1,22 @@
-//    This file is part of gvis.
-//
-//    Copyright (C) 2008, 2009, 2010
-//       Gabriel Alvarez
-//    
-//    gvis is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    Foobar is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+/*
+ * This file is part of gvis.
+ *
+ * Copyright (C) 2008, 2009, 2010
+ *    Gabriel Alvarez
+ *
+ * gvis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * gvis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with gvis.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "PantallaFalsoColor.h"
 #include <stdio.h>
@@ -39,7 +41,12 @@ Controlador("falsoColor")
     rojo_refListStore= Gtk::ListStore::create(m_text_columns);
     verde_refListStore= Gtk::ListStore::create(m_text_columns);
     azul_refListStore= Gtk::ListStore::create(m_text_columns);
-
+    falsoColorRojo->set_model(rojo_refListStore);
+    falsoColorVerde->set_model(verde_refListStore);
+    falsoColorAzul->set_model(azul_refListStore);
+    falsoColorRojo->pack_start(m_text_columns.nombre);
+    falsoColorVerde->pack_start(m_text_columns.nombre);
+    falsoColorAzul->pack_start(m_text_columns.nombre);
   }
 
 void PantallaFalsoColor::mostrar(Pintor* p, Imagen*i)
@@ -96,12 +103,6 @@ void PantallaFalsoColor::combo_add_item(const Capa& capa)
         row[m_text_columns.nombre] = capa.nombre;
 
       }
-  }
-
-void PantallaFalsoColor::append_text(Gtk::ComboBox* combo,
-    const Glib::ustring& text)
-  {
-    gtk_combo_box_append_text(combo->gobj(), text.c_str());
   }
 
 Glib::ustring PantallaFalsoColor::get_active_text(Gtk::ComboBox* combo) const
