@@ -1,7 +1,8 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * main.cc
- * Copyright (C) Gabriel Alvarez 2010 <gabriel.tandil@gmail.com>
+ * This file is part of gvis.
+ *
+ * Copyright (C) 2008, 2009, 2010
+ *    Gabriel Alvarez
  *
  * gvis is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
