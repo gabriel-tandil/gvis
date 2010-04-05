@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_CHx94GSEEd2N1eOpx0mIwQ" name="umlExample2">
+  <packageImport xmi:id="_CHx94WSEEd2N1eOpx0mIwQ">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="__PuWMGSEEd2N1eOpx0mIwQ" name="Imagen">
+    <ownedAttribute xmi:id="_SN0aEGSUEd2Og_6cFry9QA" name="cabecera" visibility="public" type="_dUYcoGSFEd2N1eOpx0mIwQ" isUnique="false">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_XalZ4GSUEd2Og_6cFry9QA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XabB0GSUEd2Og_6cFry9QA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_XaxnIGSUEd2Og_6cFry9QA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_dnF_cGSUEd2Og_6cFry9QA" name="vectorCapa" visibility="public" isUnique="false" aggregation="shared">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7crIEGSUEd2Og_6cFry9QA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7cZbQGSUEd2Og_6cFry9QA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_mbyIMGSUEd2Og_6cFry9QA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_smb9gGSdEd2Og_6cFry9QA" name="capa" type="_fR4EEGSFEd2N1eOpx0mIwQ" isUnique="false" aggregation="shared" association="_smN7EGSdEd2Og_6cFry9QA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_4SGTYGSdEd2Og_6cFry9QA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_4R0mkGSdEd2Og_6cFry9QA"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_vwDZ0GSdEd2Og_6cFry9QA" name="cabecera" type="_dUYcoGSFEd2N1eOpx0mIwQ" isUnique="false" association="_vv7eAGSdEd2Og_6cFry9QA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vwLVoGSdEd2Og_6cFry9QA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vwKukGSdEd2Og_6cFry9QA"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_dUYcoGSFEd2N1eOpx0mIwQ" name="Cabecera">
+    <ownedAttribute xmi:id="_Y5rCgGSeEd2Og_6cFry9QA" name="fecha" visibility="public" isUnique="false">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_b6d6AGSeEd2Og_6cFry9QA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_b6OpcGSeEd2Og_6cFry9QA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_b6txoGSeEd2Og_6cFry9QA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_cMUfAGSeEd2Og_6cFry9QA" name="ancho" visibility="public" isUnique="false">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_eiz1QGSeEd2Og_6cFry9QA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_eiivgGSeEd2Og_6cFry9QA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_ejFiEGSeEd2Og_6cFry9QA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_e2SK4GSeEd2Og_6cFry9QA" name="alto" visibility="public" isUnique="false">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_iP7nQGSeEd2Og_6cFry9QA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_iPtk0GSeEd2Og_6cFry9QA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_iQNUEGSeEd2Og_6cFry9QA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_yoGTEGSfEd2805ukZSXeEQ" name="satelite" visibility="public" isUnique="false">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_1gO90GSfEd2805ukZSXeEQ" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_1gIQIGSfEd2805ukZSXeEQ" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_1gTPQGSfEd2805ukZSXeEQ">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_1zScsGSfEd2805ukZSXeEQ" name="tamanioPixel" visibility="public" isUnique="false">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_4MjaIGSfEd2805ukZSXeEQ" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_4MfvwGSfEd2805ukZSXeEQ" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_4MnEgGSfEd2805ukZSXeEQ">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_4frKcGSfEd2805ukZSXeEQ" name="texto" visibility="public" isUnique="false">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_5_tZ0GSfEd2805ukZSXeEQ" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_5_pIYGSfEd2805ukZSXeEQ" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_5_xEMGSfEd2805ukZSXeEQ">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_CCHKAGSgEd2805ukZSXeEQ" name="cargarArchivo(glib::ustring)"/>
+    <ownedOperation xmi:id="_FhJcsGSgEd2805ukZSXeEQ" name="crearCabecera(FILE*)"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_fR4EEGSFEd2N1eOpx0mIwQ" name="Capa"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_rl2BAGSOEd2Og_6cFry9QA" name="Cabecera_L7">
+    <generalization xmi:id="_45Pz8GSSEd2Og_6cFry9QA" general="_dUYcoGSFEd2N1eOpx0mIwQ"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_9O93AGSSEd2Og_6cFry9QA" name="Cabecara_L5">
+    <generalization xmi:id="_9tfmEGSSEd2Og_6cFry9QA" general="_dUYcoGSFEd2N1eOpx0mIwQ"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_smN7EGSdEd2Og_6cFry9QA" name="Association_Imagen_Capa" memberEnd="_smb9gGSdEd2Og_6cFry9QA _smpY4GSdEd2Og_6cFry9QA">
+    <ownedEnd xmi:id="_smpY4GSdEd2Og_6cFry9QA" name="imagen" type="__PuWMGSEEd2N1eOpx0mIwQ" isUnique="false" association="_smN7EGSdEd2Og_6cFry9QA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_sm-wEGSdEd2Og_6cFry9QA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_snAlQGSdEd2Og_6cFry9QA"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_vv7eAGSdEd2Og_6cFry9QA" name="Association_Imagen_Cabecera" memberEnd="_vwDZ0GSdEd2Og_6cFry9QA _vwL8sGSdEd2Og_6cFry9QA">
+    <ownedEnd xmi:id="_vwL8sGSdEd2Og_6cFry9QA" name="imagen" type="__PuWMGSEEd2N1eOpx0mIwQ" isUnique="false" association="_vv7eAGSdEd2Og_6cFry9QA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vwSqYGSdEd2Og_6cFry9QA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vwW70GSdEd2Og_6cFry9QA"/>
+    </ownedEnd>
+  </packagedElement>
+  <profileApplication xmi:id="_CHx94mSEEd2N1eOpx0mIwQ">
+    <eAnnotations xmi:id="_CHx942SEEd2N1eOpx0mIwQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/uml2/schemas/Standard/1#/"/>
+    </eAnnotations>
+    <appliedProfile href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+  </profileApplication>
+</uml:Model>
