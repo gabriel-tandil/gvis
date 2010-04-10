@@ -22,7 +22,7 @@
 #include <iostream>
 Controlador::Controlador(Glib::ustring nombre)
   {
-g_print("%s%s%s",CARPETA_UI, nombre.c_str() , EXTENSION_UI);
+//g_print("%s%s%s",CARPETA_UI, nombre.c_str() , EXTENSION_UI);
 	builder = Gtk::Builder::create_from_file(CARPETA_UI + nombre + EXTENSION_UI);
 	builder->get_widget("ventana", ventana);
   }
