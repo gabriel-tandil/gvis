@@ -92,9 +92,6 @@ void PantallaFalsoColor::combo_add_item(const Capa& capa)
   {
     if (capa.cargada)
       {
-        //      append_text(falsoColorRojo,capa.nombre);
-        //      append_text(falsoColorVerde,capa.nombre);
-        //      append_text(falsoColorAzul,capa.nombre);
         Gtk::TreeRow row = *(rojo_refListStore->append());
         row[m_text_columns.nombre] = capa.nombre;
         row = *(verde_refListStore->append());

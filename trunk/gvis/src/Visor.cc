@@ -51,7 +51,8 @@ void Visor::on_ventana_show()
 
 bool Visor::on_scrollHorizontal_change(Gtk::ScrollType st, double v)
   {
-    printf("%f", v);
+    g_print("%f \n", v);
+    pintorPrincipal->refrescar();
     return true;
   }
 
@@ -66,8 +67,8 @@ bool Visor::on_dibujo_rClik(GdkEventButton* evento)
 
 bool Visor::on_dibujo_expose(GdkEventExpose* evento)
   {
-    for (int i=0;i<600;i++)
-      for (int ii=0;ii<600;ii++){
+    for (int i=0;i<100;i++)
+      for (int ii=0;ii<100;ii++){
 
 
     }
