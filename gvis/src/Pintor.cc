@@ -37,7 +37,9 @@ void Pintor::refrescar()
     for (int i = 0; i < 100; i++)
       for (int ii = 0; ii < 100; ii++)
         {
-          area[i][ii].red = (*imagen->vectorCapa[capaRoja].datos)[ii].bloque[i]
+        Capa c=imagen->vectorCapa[capaRoja];
+        Capa::RegistroBloque rb=(*c.datos)[ii];
+          area[i][ii].red =  rb.bloque[i]
               >> 8;
           area[i][ii].green
               = (*imagen->vectorCapa[capaVerde].datos)[ii].bloque[i] >> 8;
