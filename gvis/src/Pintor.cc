@@ -21,36 +21,38 @@
 #include "Pintor.h"
 
 Pintor::Pintor(Imagen* img, Gtk::DrawingArea* dibu)
-  {
-    dibujo = dibu;
-    imagen = img;
-    falsoColor.rojo = 0;
-    falsoColor.verde = 0;
-    falsoColor.azul = 0;
-  }
+{
+  dibujo = dibu;
+  imagen = img;
+  falsoColor.rojo = 0;
+  falsoColor.verde = 0;
+  falsoColor.azul = 0;
+}
 
-void Pintor::refrescar()
-  {
-    int capaRoja = falsoColor.rojo;
-    int capaVerde = falsoColor.verde;
-    int capaAzul = falsoColor.azul;
-    for (int i = 0; i < 100; i++)
-      for (int ii = 0; ii < 100; ii++)
-        {
-        Capa c=imagen->vectorCapa[capaRoja];
-        Capa::RegistroBloque rb=(*c.datos)[ii];
-          area[i][ii].red =  rb.bloque[i]
-              >> 8;
-          area[i][ii].green
-              = (*imagen->vectorCapa[capaVerde].datos)[ii].bloque[i] >> 8;
-          area[i][ii].blue
-              = (*imagen->vectorCapa[capaAzul].datos)[ii].bloque[i] >> 8;
-        }
+void
+Pintor::refrescar()
+{
+  int capaRoja = falsoColor.rojo;
+  int capaVerde = falsoColor.verde;
+  int capaAzul = falsoColor.azul;
+  for (int i = 0; i < 100; i++)
+    for (int ii = 0; ii < 100; ii++)
+      {
+        Capa* c = &imagen->vectorCapa[capaRoja];
+        Capa::RegistroBloque rb = (*c->datos)[ii];
+        area[i][ii].red = rb.bloque[i] >> 8;
+     //   c = &imagen->vectorCapa[capaVerde];
+//        rb = (*c->datos)[ii];
+//        area[i][ii].green = rb.bloque[i] >> 8;
+//        c = &imagen->vectorCapa[capaAzul];
+//        rb = (*c->datos)[ii];
+        //       area[i][ii].blue = rb.bloque[i] >> 8;
+      }
 
-    dibujo->queue_draw();
-  }
+  dibujo->queue_draw();
+}
 
 Pintor::~Pintor()
-  {
-    // TODO Auto-generated destructor stub
-  }
+{
+  // TODO Auto-generated destructor stub
+}
