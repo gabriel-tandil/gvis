@@ -21,55 +21,99 @@
 #include "Capa.h"
 
 Capa::Capa(Glib::ustring nom, bool carga, Imagen* i)
-  {
-    imagen = i;
-    nombre = nom;
-    cargada = carga;
-    anchoVista = 100;
-    altoVista = 100;
-  }
+{
+  imagen = i;
+  nombre = nom;
+  cargada = carga;
+  anchoVista = 100;
+  altoVista = 100;
+}
 
-void Capa::cargarCapa()
-  {
-    if (cargada)
-      {
-        int tama = imagen->cabecera->ancho * imagen->cabecera->alto;
-        int salto = std::min(imagen->cabecera->ancho, imagen->cabecera->alto)
-            / std::min(anchoVista, altoVista) - imagen->tamanioBloque;
-        int bloquesSalto = salto / imagen->tamanioBloque;
-        int cantBloques = tama / imagen->tamanioBloque;
-        datos = new std::vector<RegistroBloque>(tama / imagen->tamanioBloque);
-        RegistroBloque * rb;
-        FILE *f;
-        g_print("Cargando ");g_print((imagen->getDirectorio()+ imagen->cabecera->obtieneNombreArchivoCapa(nombre)).c_str());g_print("...\n");
-        f = fopen((imagen->getDirectorio()+ imagen->cabecera->obtieneNombreArchivoCapa(nombre)).c_str(),
-            "rb");
-        if (f!=NULL){
-        for (int i = 0; i < cantBloques; i++)
-          {
-            rb=new RegistroBloque;
-            TBloque* tb= (TBloque *)malloc(  imagen->tamanioBloque*sizeof(TBloque) );
+//Capa::Capa(const Capa &capa){
+//
+//}
 
-            rb->momentoUso = *new Glib::TimeVal();
-            rb->momentoUso.assign_current_time();
-            fread(tb, sizeof(TBloque), imagen->tamanioBloque, f);
-            rb->bloque =tb ;
-            (*datos)[i] = *rb;
-            for (int j = 0; j < bloquesSalto; j++)
-              {
-                rb=new RegistroBloque;
-                rb->bloque = NULL; //TODO: estudiar de usar una lista vinculada (o doblemente vinculada) para no tener todos los blancos
-                //tiene pros y contras
-                (*datos)[++i] = *rb;
-              }
-            fseek(f, bloquesSalto * imagen->tamanioBloque, SEEK_CUR);
-          }
-        }else{
-           g_print("No se encontro el archivo ");g_print(imagen->cabecera->obtieneNombreArchivoCapa(nombre).c_str());
+void
+Capa::cargarCapa()
+{
+  srand(time(NULL));
+  if (cargada)
+    {
+      FILE *f;
+      g_print("Cargando ");
+      g_print((imagen->getDirectorio()
+          + imagen->cabecera->obtieneNombreArchivoCapa(nombre)).c_str());
+      g_print("...\n");
+      f = fopen((imagen->getDirectorio()
+          + imagen->cabecera->obtieneNombreArchivoCapa(nombre)).c_str(), "rb");
+      if (f != NULL)
+        {
+          matriz = new guint8*[imagen->cabecera->alto];
+          // datos = new RegistroBloque[100];
+          for (int i = 0; i < imagen->cabecera->alto; i++)
+            {
+              //    datos[i].momentoUso.assign_current_time();
+              //   datos[i].bloque = new TBloque[100];
+              matriz[i] = new guint8[imagen->cabecera->ancho];//(TBloque *)malloc(  imagen->tamanioBloque*sizeof(TBloque) );
+              fread(matriz[i], sizeof(guint8), imagen->cabecera->ancho, f);
+
+              // for (int ii = 0; ii < imagen->cabecera->ancho; ii++)
+              //  {
+              //   matriz[i][ii] = rand()%256;
+              //              datos[i].bloque[ii] = rand();
+              // }
+            }
+
         }
-        fclose(f);
-      }
-  }
+      else
+        {
+          g_print("No se encontro el archivo ");
+          g_print(imagen->cabecera->obtieneNombreArchivoCapa(nombre).c_str());
+        }
+      fclose(f);
+
+      //        int tama = imagen->cabecera->ancho * imagen->cabecera->alto;
+      //        int salto =0 /*std::min(imagen->cabecera->ancho, imagen->cabecera->alto)
+      //            / std::min(anchoVista, altoVista) - imagen->tamanioBloque*/;
+      //        int bloquesSalto =0 /*salto / imagen->tamanioBloque*/;
+      //        int cantBloques = tama / imagen->tamanioBloque;
+      //        datos = new RegistroBloque[tama / imagen->tamanioBloque];
+      //        RegistroBloque * rb;
+      //        FILE *f;
+      //        g_print("Cargando ");g_print((imagen->getDirectorio()+ imagen->cabecera->obtieneNombreArchivoCapa(nombre)).c_str());g_print("...\n");
+      //        f = fopen((imagen->getDirectorio()+ imagen->cabecera->obtieneNombreArchivoCapa(nombre)).c_str(),
+      //            "rb");
+      //        if (f!=NULL){
+      //        for (int i = 0; i < cantBloques; i++)
+      //          {
+      //            rb=new RegistroBloque;
+      //            TBloque* tb= new TBloque[imagen->tamanioBloque];//(TBloque *)malloc(  imagen->tamanioBloque*sizeof(TBloque) );
+      //
+      //            rb->momentoUso = *new Glib::TimeVal();
+      //            rb->momentoUso.assign_current_time();
+      //            fread(tb, sizeof(TBloque), imagen->tamanioBloque, f);
+      //            rb->bloque =tb ;
+      //            datos[i] = *rb;
+      //            for (int j = 0; j < bloquesSalto; j++)
+      //              {
+      //                rb=new RegistroBloque;
+      //                rb->bloque = NULL; //TODO: estudiar de usar una lista vinculada (o doblemente vinculada) para no tener todos los blancos
+      //                //tiene pros y contras
+      //                datos[++i] = *rb;
+      //              }
+      //            fseek(f, bloquesSalto * imagen->tamanioBloque, SEEK_CUR);
+      //          }
+      //        }else{
+      //           g_print("No se encontro el archivo ");g_print(imagen->cabecera->obtieneNombreArchivoCapa(nombre).c_str());
+      //        }
+      //        fclose(f);
+    }
+}
 Capa::~Capa()
-  {
-  }
+{
+  for (int i = 0; i < imagen->cabecera->alto; i++)
+    {
+      delete matriz[i];
+    }
+  delete matriz;
+}

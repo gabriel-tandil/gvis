@@ -27,7 +27,7 @@ class Capa;
 class Imagen
   {
 public:
-  typedef std::vector<Capa> TVectorCapa;
+  typedef std::vector<Capa*> TVectorCapa;
   Imagen(Glib::ustring archivoCab);
   virtual ~Imagen();
   void cargarCapas();
