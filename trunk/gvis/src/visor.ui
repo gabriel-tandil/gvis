@@ -306,8 +306,8 @@
                 </child>
                 <child>
                   <object class="GtkDrawingArea" id="dibujo">
-                    <property name="width_request">100</property>
-                    <property name="height_request">100</property>
+                    <property name="width_request">200</property>
+                    <property name="height_request">200</property>
                     <property name="visible">True</property>
                     <property name="events">GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK</property>
                   </object>

@@ -37,6 +37,8 @@ public:
 
   virtual bool
   on_scrollHorizontal_change(Gtk::ScrollType st, double v);
+  virtual bool
+  on_scrollVertical_change(Gtk::ScrollType st, double v);
   virtual void
   on_ventana_show();
   virtual void
@@ -47,8 +49,6 @@ public:
   on_configFalsoColor_clik();
   virtual bool
   on_dibujo_rClik(GdkEventButton* evento);
-  virtual bool
-  on_dibujo_expose(GdkEventExpose* evento);
   Gtk::Menu* menuEmergenteDibujo;
   Gtk::ImageMenuItem* abrir;
   Gtk::ImageMenuItem* verCabecera;

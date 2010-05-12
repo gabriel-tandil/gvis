@@ -30,8 +30,8 @@ Imagen::Imagen(Glib::ustring archivoCab)
     fclose(f);
     for (unsigned int i = 0; i < cabecera->getBandasPresentes().length(); ++i)
       {
-        vectorCapa.push_back(Capa(cabecera->getBandasPresentes().substr(i, 1),
-            false, this));
+      Capa* c=new Capa(cabecera->getBandasPresentes().substr(i, 1),false, this);
+        vectorCapa.push_back(c);
       }
   }
 
@@ -39,7 +39,7 @@ void Imagen::cargarCapas()
   {
     for (unsigned int i = 0; i < vectorCapa.size(); i++)
       {
-        vectorCapa[i].cargarCapa();
+        vectorCapa[i]->cargarCapa();
       }
   }
 
@@ -59,7 +59,7 @@ Glib::ustring Imagen::getDirectorio()
   }
 int Imagen::obtenerNumeroCapa(Glib::ustring cual){
   for (unsigned int var = 0; var < vectorCapa.size(); ++var) {
-    if (vectorCapa[var].nombre==cual)
+    if (vectorCapa[var]->nombre==cual)
       return var;
   }
   return -1;

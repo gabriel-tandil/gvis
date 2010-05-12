@@ -22,101 +22,109 @@
 #include <stdio.h>
 #include <gtk/gtkcombobox.h>
 
-PantallaFalsoColor::PantallaFalsoColor():
-Controlador("falsoColor")
-  {
-    builder->get_widget("falsoColorRojo", falsoColorRojo);
-    builder->get_widget("falsoColorVerde", falsoColorVerde);
-    builder->get_widget("falsoColorAzul", falsoColorAzul);
-    builder->get_widget("aceptar_falsoColor", aceptar_falsoColor);
-    builder->get_widget("cancelar_falsoColor",
-        cancelar_falsoColor);
-    aceptar_falsoColor->signal_clicked().connect(sigc::mem_fun(*this,
-            &PantallaFalsoColor::on_aceptar_falsoColor_clik));
-    cancelar_falsoColor->signal_clicked().connect(sigc::mem_fun(*this,
-            &PantallaFalsoColor::on_cancelar_falsoColor_clik));
-    ventana->signal_show().connect(sigc::mem_fun(*this,
-            &PantallaFalsoColor::on_ventana_show));
+PantallaFalsoColor::PantallaFalsoColor() :
+  Controlador("falsoColor")
+{
+  builder->get_widget("falsoColorRojo", falsoColorRojo);
+  builder->get_widget("falsoColorVerde", falsoColorVerde);
+  builder->get_widget("falsoColorAzul", falsoColorAzul);
+  builder->get_widget("aceptar_falsoColor", aceptar_falsoColor);
+  builder->get_widget("cancelar_falsoColor", cancelar_falsoColor);
+  aceptar_falsoColor->signal_clicked().connect(sigc::mem_fun(*this,
+      &PantallaFalsoColor::on_aceptar_falsoColor_clik));
+  cancelar_falsoColor->signal_clicked().connect(sigc::mem_fun(*this,
+      &PantallaFalsoColor::on_cancelar_falsoColor_clik));
+  ventana->signal_show().connect(sigc::mem_fun(*this,
+      &PantallaFalsoColor::on_ventana_show));
 
-    rojo_refListStore= Gtk::ListStore::create(m_text_columns);
-    verde_refListStore= Gtk::ListStore::create(m_text_columns);
-    azul_refListStore= Gtk::ListStore::create(m_text_columns);
-    falsoColorRojo->set_model(rojo_refListStore);
-    falsoColorVerde->set_model(verde_refListStore);
-    falsoColorAzul->set_model(azul_refListStore);
-    falsoColorRojo->pack_start(m_text_columns.nombre);
-    falsoColorVerde->pack_start(m_text_columns.nombre);
-    falsoColorAzul->pack_start(m_text_columns.nombre);
-  }
+  rojo_refListStore = Gtk::ListStore::create(m_text_columns);
+  verde_refListStore = Gtk::ListStore::create(m_text_columns);
+  azul_refListStore = Gtk::ListStore::create(m_text_columns);
+  falsoColorRojo->set_model(rojo_refListStore);
+  falsoColorVerde->set_model(verde_refListStore);
+  falsoColorAzul->set_model(azul_refListStore);
+  falsoColorRojo->pack_start(m_text_columns.nombre);
+  falsoColorVerde->pack_start(m_text_columns.nombre);
+  falsoColorAzul->pack_start(m_text_columns.nombre);
+}
 
-void PantallaFalsoColor::mostrar(Pintor* p, Imagen*i)
-  {
-    pintor = p;
-    imagen = i;
-    armarCombos();
+void
+PantallaFalsoColor::mostrar(Pintor* p, Imagen*i)
+{
+  pintor = p;
+  imagen = i;
+  armarCombos();
 
-    ventana->show();
-  }
+  ventana->show();
+}
 
-void PantallaFalsoColor::on_ventana_show()
-  {
+void
+PantallaFalsoColor::on_ventana_show()
+{
 
-  }
+}
 
-void PantallaFalsoColor::on_aceptar_falsoColor_clik()
-  {
-    pintor->falsoColor.rojo = imagen->obtenerNumeroCapa(get_active_text(
-        falsoColorRojo));
-    pintor->falsoColor.verde = imagen->obtenerNumeroCapa(get_active_text(
-        falsoColorVerde));
-    pintor->falsoColor.azul = imagen->obtenerNumeroCapa(get_active_text(
-        falsoColorAzul));
+void
+PantallaFalsoColor::on_aceptar_falsoColor_clik()
+{
+  pintor->falsoColor.rojo = imagen->obtenerNumeroCapa(get_active_text(
+      falsoColorRojo));
+  pintor->falsoColor.verde = imagen->obtenerNumeroCapa(get_active_text(
+      falsoColorVerde));
+  pintor->falsoColor.azul = imagen->obtenerNumeroCapa(get_active_text(
+      falsoColorAzul));
 
-    ventana->hide();
-  }
+  ventana->hide();
+}
 
-void PantallaFalsoColor::on_cancelar_falsoColor_clik()
-  {
-    ventana->hide();
-  }
+void
+PantallaFalsoColor::on_cancelar_falsoColor_clik()
+{
+  ventana->hide();
+}
 
-void PantallaFalsoColor::armarCombos()
-  {
+void
+PantallaFalsoColor::armarCombos()
+{
 
-    std::for_each(imagen->vectorCapa.begin(), imagen->vectorCapa.end(),
-        sigc::mem_fun(*this, &PantallaFalsoColor::combo_add_item));
+  for (unsigned int i = 0; i < imagen->vectorCapa.size(); ++i)
+    {
+      combo_add_item(imagen->vectorCapa[i]);
+    }
 
-  }
+}
 
-void PantallaFalsoColor::combo_add_item(const Capa& capa)
-  {
-    if (capa.cargada)
-      {
-        Gtk::TreeRow row = *(rojo_refListStore->append());
-        row[m_text_columns.nombre] = capa.nombre;
-        row = *(verde_refListStore->append());
-        row[m_text_columns.nombre] = capa.nombre;
-        row = *(azul_refListStore->append());
-        row[m_text_columns.nombre] = capa.nombre;
+void
+PantallaFalsoColor::combo_add_item(const Capa* capa)
+{
+  if (capa->cargada)
+    {
+      Gtk::TreeRow row = *(rojo_refListStore->append());
+      row[m_text_columns.nombre] = capa->nombre;
+      row = *(verde_refListStore->append());
+      row[m_text_columns.nombre] = capa->nombre;
+      row = *(azul_refListStore->append());
+      row[m_text_columns.nombre] = capa->nombre;
 
-      }
-  }
+    }
+}
 
-Glib::ustring PantallaFalsoColor::get_active_text(Gtk::ComboBox* combo) const
-  {
-    Glib::ustring result;
+Glib::ustring
+PantallaFalsoColor::get_active_text(Gtk::ComboBox* combo) const
+{
+  Glib::ustring result;
 
-    //Get the active row:
-    Gtk::TreeModel::iterator active_row = combo->get_active();
-    if (active_row)
-      {
-        Gtk::TreeModel::Row row = *active_row;
-        result = row[m_text_columns.nombre];
-      }
+  //Get the active row:
+  Gtk::TreeModel::iterator active_row = combo->get_active();
+  if (active_row)
+    {
+      Gtk::TreeModel::Row row = *active_row;
+      result = row[m_text_columns.nombre];
+    }
 
-    return result;
-  }
+  return result;
+}
 
 PantallaFalsoColor::~PantallaFalsoColor()
-  {
-  }
+{
+}

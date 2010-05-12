@@ -32,11 +32,14 @@ public:
   {
     int rojo,verde,azul;
   };
-  GdkColor area[600][600];
   TFalsoColor falsoColor;
-  Pintor(Imagen* img,Gtk::DrawingArea* dibu);
-  void refrescar();
+  int desplazamientoX,desplazamientoY;
+  Pintor(Gtk::DrawingArea* dibu);
+  bool on_dibujo_expose(GdkEventExpose* evento);
   virtual ~Pintor();
+  void setImagen(Imagen* img);
+  void setDesplazamientoX(int desp);
+  void setDesplazamientoY(int desp);
 private:
   Gtk::DrawingArea* dibujo;
   Imagen* imagen;

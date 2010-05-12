@@ -45,7 +45,7 @@ public:
   Imagen* imagen;
   Glib::RefPtr<Gtk::ListStore> m_refListStore;
   void add_columns();
-  void liststore_add_item(const Capa& foo);
+  void liststore_add_item(const Capa* foo);
 
   struct ModelColumns : public Gtk::TreeModel::ColumnRecord
     {

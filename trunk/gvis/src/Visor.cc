@@ -20,90 +20,116 @@
 
 #include "Visor.h"
 
-Visor::Visor():
-Controlador("visor")
-  {
-    builder->get_widget("scrollHorizontal", scrollHorizontal);
-    builder->get_widget("scrollVertical", scrollVertical);
-    builder->get_widget("dibujo", dibujo);
-    builder->get_widget("abrir", abrir);
-    builder->get_widget("verCabecera", verCabecera);
-    builder->get_widget("configFalsoColor", configFalsoColor);
-    builder->get_widget("ventanaCabecera", ventanaCabecera);
- //   builder->get_widget("menuEmergenteDibujo",menuEmergenteDibujo);
-    scrollHorizontal->signal_change_value().connect(sigc::mem_fun(*this, &Visor::on_scrollHorizontal_change));
-    ventana->signal_show().connect(sigc::mem_fun(*this, &Visor::on_ventana_show));
-    abrir->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_abrir_clik));
-    configFalsoColor->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_configFalsoColor_clik));
-    verCabecera->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_verCabecera_clik));
-    dibujo->signal_button_press_event().connect(sigc::mem_fun(*this, &Visor::on_dibujo_rClik));
-    dibujo->signal_expose_event().connect(sigc::mem_fun(*this, &Visor::on_dibujo_expose));
+Visor::Visor() :
+  Controlador("visor")
+{
+  builder->get_widget("scrollHorizontal", scrollHorizontal);
+  builder->get_widget("scrollVertical", scrollVertical);
+  builder->get_widget("dibujo", dibujo);
+  builder->get_widget("abrir", abrir);
+  builder->get_widget("verCabecera", verCabecera);
+  builder->get_widget("configFalsoColor", configFalsoColor);
+  builder->get_widget("ventanaCabecera", ventanaCabecera);
+  //   builder->get_widget("menuEmergenteDibujo",menuEmergenteDibujo);
+  pintorPrincipal = new Pintor(dibujo);
 
-    pantallaCapas=new PantallaCapas();
-    pantallaFalsoColor=new PantallaFalsoColor();
-    pintorPrincipal=new Pintor(imagen,dibujo);
-  }
+  scrollHorizontal->signal_change_value().connect(sigc::mem_fun(*this,
+      &Visor::on_scrollHorizontal_change));
+  scrollVertical->signal_change_value().connect(sigc::mem_fun(*this,
+      &Visor::on_scrollVertical_change));
+  ventana->signal_show().connect(sigc::mem_fun(*this, &Visor::on_ventana_show));
+  abrir->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_abrir_clik));
+  configFalsoColor->signal_activate().connect(sigc::mem_fun(*this,
+      &Visor::on_configFalsoColor_clik));
+  verCabecera->signal_activate().connect(sigc::mem_fun(*this,
+      &Visor::on_verCabecera_clik));
+  dibujo->signal_button_press_event().connect(sigc::mem_fun(*this,
+      &Visor::on_dibujo_rClik));
+  dibujo->signal_expose_event().connect(sigc::mem_fun(*pintorPrincipal,
+      &Pintor::on_dibujo_expose));
 
-void Visor::on_ventana_show()
-  {
+  pantallaCapas = new PantallaCapas();
+  pantallaFalsoColor = new PantallaFalsoColor();
 
-  }
+}
 
-bool Visor::on_scrollHorizontal_change(Gtk::ScrollType st, double v)
-  {
-    g_print("%f \n", v);
-    pintorPrincipal->refrescar();
-    return true;
-  }
+void
+Visor::on_ventana_show()
+{
 
-bool Visor::on_dibujo_rClik(GdkEventButton* evento)
-  {
-    if (evento->button==1){
+}
+
+bool
+Visor::on_scrollHorizontal_change(Gtk::ScrollType st, double v)
+{
+  pintorPrincipal->setDesplazamientoX(
+      scrollHorizontal->get_adjustment()->get_value());
+  g_print("%f \n", scrollHorizontal->get_adjustment()->get_value());
+  dibujo->queue_draw();
+  return true;
+}
+
+bool
+Visor::on_scrollVertical_change(Gtk::ScrollType st, double v)
+{
+  g_print("%f \n", scrollVertical->get_adjustment()->get_value());
+
+  pintorPrincipal->setDesplazamientoY(
+      scrollVertical->get_adjustment()->get_value());
+  dibujo->queue_draw();
+  return true;
+}
+
+bool
+Visor::on_dibujo_rClik(GdkEventButton* evento)
+{
+  if (evento->button == 1)
+    {
       menuEmergenteDibujo->show();
     }
 
-    return true;
-  }
+  return true;
+}
 
-bool Visor::on_dibujo_expose(GdkEventExpose* evento)
-  {
-    for (int i=0;i<100;i++)
-      for (int ii=0;ii<100;ii++){
+void
+Visor::on_abrir_clik()
+{
 
+  Gtk::FileChooserDialog dialog("Seleccione archivo de Cabecera...",
+      Gtk::FILE_CHOOSER_ACTION_OPEN);
+  dialog.set_transient_for(*ventana);
+  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+  dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
 
+  const int response = dialog.run();
+  if (response == Gtk::RESPONSE_OK)
+    {
+      imagen = new Imagen(dialog.get_filename());
     }
+  pantallaCapas->mostrar(imagen);
+  pintorPrincipal->setImagen(imagen);
+  scrollHorizontal->get_adjustment()->set_step_increment(100);
+  scrollHorizontal->get_adjustment()->set_lower(0);
+  scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
+      - dibujo->get_width());
+  scrollVertical->get_adjustment()->set_step_increment(100);
+  scrollVertical->get_adjustment()->set_lower(0);
+  scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
+      - dibujo->get_height());
+  dibujo->queue_draw();
+}
 
-    return true;
-  }
+void
+Visor::on_configFalsoColor_clik()
+{
 
-void Visor::on_abrir_clik()
-  {
+  pantallaFalsoColor->mostrar(pintorPrincipal, imagen);
 
-    Gtk::FileChooserDialog dialog("Seleccione archivo de Cabecera...",
-        Gtk::FILE_CHOOSER_ACTION_OPEN);
-    dialog.set_transient_for(*ventana);
-    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-    dialog.add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
+}
 
-    const int response = dialog.run();
-    if (response == Gtk::RESPONSE_OK)
-      {
-        imagen=new Imagen(dialog.get_filename());
-      }
-    pantallaCapas->mostrar(imagen);
-
-  }
-
-void Visor::on_configFalsoColor_clik()
-  {
-
-    pantallaFalsoColor->mostrar(pintorPrincipal,imagen);
-
-  }
-
-
-void Visor::on_verCabecera_clik()
-  {
+void
+Visor::on_verCabecera_clik()
+{
   Gtk::TextView* textoCabecera;
   Gtk::Entry* bandas;
   Gtk::Entry* fecha;
@@ -111,15 +137,15 @@ void Visor::on_verCabecera_clik()
   builder->get_widget("fecha", fecha);
   builder->get_widget("textoCabecera", textoCabecera);
 
-  Glib::RefPtr<Gtk::TextBuffer> buffer= textoCabecera->get_buffer();
+  Glib::RefPtr<Gtk::TextBuffer> buffer = textoCabecera->get_buffer();
 
-  buffer->set_text(imagen->cabecera->getTexto().substr(0,imagen->cabecera->getTexto().length()-1));
+  buffer->set_text(imagen->cabecera->getTexto().substr(0,
+      imagen->cabecera->getTexto().length() - 1));
   bandas->set_text(imagen->cabecera->getBandasPresentes());
   fecha->set_text(imagen->cabecera->getFecha().format_string("%x"));
   ventanaCabecera->show();
-  }
-
+}
 
 Visor::~Visor()
-  {
-  }
+{
+}

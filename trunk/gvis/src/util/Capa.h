@@ -25,12 +25,15 @@
 
 class Imagen; //forward
 class Capa
-  {
+{
 public:
 
   Capa(Glib::ustring, bool, Imagen*);
-  virtual ~Capa();
-  void cargarCapa();
+  //  Capa(const Capa &capa);
+  virtual
+  ~Capa();
+  void
+  cargarCapa();
   Glib::ustring nombre;
   gint16 anchoVista;
   gint16 altoVista;
@@ -38,13 +41,14 @@ public:
   Imagen* imagen;
   typedef gint8 TBloque;
   struct RegistroBloque
-    {
+  {
     TBloque* bloque;
     Glib::TimeVal momentoUso;
-    };
-  std::vector<RegistroBloque>* datos;
+  };
+  RegistroBloque* datos;
+  guint8** matriz;
 private:
 
-  };
+};
 
 #endif /*CAPA_H_*/
