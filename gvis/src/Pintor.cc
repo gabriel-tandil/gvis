@@ -48,8 +48,8 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
   refGC1->set_rgb_fg_color(color);
   g_print("Redibujando %i,%i->%i,%i\n", evento->area.x, evento->area.y,
       evento->area.x + evento->area.width, evento->area.y + evento->area.height);
-  for (int i = evento->area.x; i < evento->area.width; i++)
-    for (int ii = evento->area.y; ii < evento->area.height; ii++)
+  for (int i = evento->area.y; i < evento->area.height; i++)
+    for (int ii = evento->area.x; ii < evento->area.width; ii++)
       {
         //  g_print("Redibujando %i,%i\n", i, ii);
         if (capaRoja >= 0)
@@ -59,7 +59,7 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
             //            Capa::TBloque b=rb->bloque[ii];
             //           color.set_red(b >> 8);
             //   gushort s=c->matriz[i][ii];
-            color.set_red(c->matriz[i + desplazamientoX][ii + desplazamientoY]
+            color.set_red(c->matriz[i + desplazamientoY][ii + desplazamientoX]
                 * 255);
           }
         if (capaVerde >= 0)
@@ -69,7 +69,7 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
             //            Capa::TBloque b=rb->bloque[ii];
             //           color.set_red(b >> 8);
             color.set_green(
-                c->matriz[i + desplazamientoX][ii + desplazamientoY] * 255);
+                c->matriz[i + desplazamientoY][ii + desplazamientoX] * 255);
           }
         if (capaAzul >= 0)
           {
@@ -77,12 +77,12 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
             //            Capa::RegistroBloque* rb = &c->datos[i];
             //            Capa::TBloque b=rb->bloque[ii];
             //           color.set_red(b >> 8);
-            color.set_blue(c->matriz[i + desplazamientoX][ii + desplazamientoY]
+            color.set_blue(c->matriz[i + desplazamientoY][ii + desplazamientoX]
                 * 255);
           }
 
         refGC1->set_rgb_fg_color(color);
-        dibujo->get_window()->draw_point(refGC1, i, ii);
+        dibujo->get_window()->draw_point(refGC1, ii, i);
       }
   return false;
 }
