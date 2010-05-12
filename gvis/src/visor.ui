@@ -4,7 +4,7 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="ventana">
     <property name="visible">True</property>
-    <property name="title" translatable="yes">PDI 2</property>
+    <property name="title" translatable="yes">Visor de Imagenes Satelitales g</property>
     <property name="destroy_with_parent">True</property>
     <accel-groups>
       <group name="accelgroup1"/>
@@ -29,6 +29,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem1">
                         <property name="label">gtk-new</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="accel_group">accelgroup1</property>
@@ -47,6 +48,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem3">
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="accel_group">accelgroup1</property>
@@ -56,6 +58,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem4">
                         <property name="label">gtk-save-as</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="accel_group">accelgroup1</property>
@@ -67,7 +70,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem5">
+                      <object class="GtkImageMenuItem" id="salir">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
@@ -82,6 +85,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem2">
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="label" translatable="yes">_Editar</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
@@ -139,6 +143,7 @@
                       <object class="GtkImageMenuItem" id="verCabecera">
                         <property name="label">Ver Cabecera</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="accel_group">accelgroup1</property>
@@ -148,6 +153,7 @@
                       <object class="GtkImageMenuItem" id="configFalsoColor">
                         <property name="label">Configuracion Falso Color</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="accel_group">accelgroup1</property>
@@ -160,6 +166,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="label" translatable="yes">Ay_uda</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
@@ -193,7 +200,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkDrawingArea" id="miniatura0">
-                    <property name="width_request">100</property>
                     <property name="visible">True</property>
                   </object>
                   <packing>
@@ -205,6 +211,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">never</property>
+                    <property name="vscrollbar_policy">automatic</property>
                     <child>
                       <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>

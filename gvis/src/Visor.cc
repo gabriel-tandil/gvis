@@ -29,6 +29,7 @@ Visor::Visor() :
   builder->get_widget("dibujo", dibujo);
   builder->get_widget("abrir", abrir);
   builder->get_widget("verCabecera", verCabecera);
+  builder->get_widget("salir", salir);
   builder->get_widget("configFalsoColor", configFalsoColor);
   builder->get_widget("ventanaCabecera", ventanaCabecera);
   //   builder->get_widget("menuEmergenteDibujo",menuEmergenteDibujo);
@@ -44,6 +45,8 @@ Visor::Visor() :
       &Visor::on_configFalsoColor_clik));
   verCabecera->signal_activate().connect(sigc::mem_fun(*this,
       &Visor::on_verCabecera_clik));
+  salir->signal_activate().connect(sigc::mem_fun(*this,
+      &Visor::on_salir_clik));
   dibujo->signal_button_press_event().connect(sigc::mem_fun(*this,
       &Visor::on_dibujo_rClik));
   dibujo->signal_expose_event().connect(sigc::mem_fun(*pintorPrincipal,
@@ -52,7 +55,12 @@ Visor::Visor() :
       &Visor::on_dibujo_cambia_tamanio));
   pantallaCapas = new PantallaCapas();
   pantallaFalsoColor = new PantallaFalsoColor();
-
+  scrollHorizontal->get_adjustment()->set_page_size(200);
+  scrollHorizontal->get_adjustment()->set_step_increment(50);
+  scrollHorizontal->get_adjustment()->set_lower(0);
+  scrollVertical->get_adjustment()->set_page_size(200);
+  scrollVertical->get_adjustment()->set_step_increment(50);
+  scrollVertical->get_adjustment()->set_lower(0);
 }
 
 void
@@ -78,6 +86,7 @@ Visor::on_scrollVertical_change(Gtk::ScrollType st, double v)
 
   pintorPrincipal->setDesplazamientoY(
       scrollVertical->get_adjustment()->get_value());
+
   dibujo->queue_draw();
   return true;
 }
@@ -85,10 +94,15 @@ Visor::on_scrollVertical_change(Gtk::ScrollType st, double v)
 void
 Visor::on_dibujo_cambia_tamanio(Gtk::Allocation rec)
 {
-  scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
-      - dibujo->get_width());
-  scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
-      - dibujo->get_height());
+  ajustarMaximoDesplazamiento();
+
+}
+void
+Visor::ajustarMaximoDesplazamiento(){
+scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
+    - dibujo->get_width());
+scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
+    - dibujo->get_height());
 }
 
 bool
@@ -100,6 +114,13 @@ Visor::on_dibujo_rClik(GdkEventButton* evento)
     }
 
   return true;
+}
+
+void
+Visor::on_salir_clik()
+{
+
+ ventana->hide();
 }
 
 void
@@ -119,15 +140,14 @@ Visor::on_abrir_clik()
     }
   pantallaCapas->mostrar(imagen);
   pintorPrincipal->setImagen(imagen);
-  scrollHorizontal->get_adjustment()->set_step_increment(100);
-  scrollHorizontal->get_adjustment()->set_lower(0);
-  scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
-      - dibujo->get_width());
-  scrollVertical->get_adjustment()->set_step_increment(100);
-  scrollVertical->get_adjustment()->set_lower(0);
-  scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
-      - dibujo->get_height());
+
+  ajustarMaximoDesplazamiento();
+
+  configFalsoColor->set_sensitive(true);
+  verCabecera->set_sensitive(true);
+
   dibujo->queue_draw();
+
 }
 
 void

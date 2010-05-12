@@ -46,6 +46,8 @@ public:
   virtual void
   on_verCabecera_clik();
   virtual void
+  on_salir_clik();
+  virtual void
   on_configFalsoColor_clik();
   virtual bool
   on_dibujo_rClik(GdkEventButton* evento);
@@ -55,6 +57,7 @@ public:
   Gtk::ImageMenuItem* abrir;
   Gtk::ImageMenuItem* verCabecera;
   Gtk::ImageMenuItem* configFalsoColor;
+  Gtk::ImageMenuItem* salir;
   Gtk::Window* seleccionCapas;
   Gtk::VScrollbar* scrollVertical;
   Gtk::HScrollbar* scrollHorizontal;
@@ -65,7 +68,8 @@ public:
 
   Imagen* imagen;
   Pintor* pintorPrincipal;
-
+private:
+  void ajustarMaximoDesplazamiento();
 };
 
 #endif /*VISOR_H_*/
