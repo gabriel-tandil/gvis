@@ -49,6 +49,8 @@ public:
   on_configFalsoColor_clik();
   virtual bool
   on_dibujo_rClik(GdkEventButton* evento);
+  virtual void
+  on_dibujo_cambia_tamanio(Gtk::Allocation rec);
   Gtk::Menu* menuEmergenteDibujo;
   Gtk::ImageMenuItem* abrir;
   Gtk::ImageMenuItem* verCabecera;

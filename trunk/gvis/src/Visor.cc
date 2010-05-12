@@ -23,6 +23,7 @@
 Visor::Visor() :
   Controlador("visor")
 {
+  imagen=NULL;
   builder->get_widget("scrollHorizontal", scrollHorizontal);
   builder->get_widget("scrollVertical", scrollVertical);
   builder->get_widget("dibujo", dibujo);
@@ -47,7 +48,8 @@ Visor::Visor() :
       &Visor::on_dibujo_rClik));
   dibujo->signal_expose_event().connect(sigc::mem_fun(*pintorPrincipal,
       &Pintor::on_dibujo_expose));
-
+  dibujo->signal_size_allocate().connect(sigc::mem_fun(*this,
+      &Visor::on_dibujo_cambia_tamanio));
   pantallaCapas = new PantallaCapas();
   pantallaFalsoColor = new PantallaFalsoColor();
 
@@ -78,6 +80,15 @@ Visor::on_scrollVertical_change(Gtk::ScrollType st, double v)
       scrollVertical->get_adjustment()->get_value());
   dibujo->queue_draw();
   return true;
+}
+
+void
+Visor::on_dibujo_cambia_tamanio(Gtk::Allocation rec)
+{
+  scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
+      - dibujo->get_width());
+  scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
+      - dibujo->get_height());
 }
 
 bool
