@@ -86,7 +86,9 @@ PantallaFalsoColor::on_cancelar_falsoColor_clik()
 void
 PantallaFalsoColor::armarCombos()
 {
-
+  rojo_refListStore->clear();
+  verde_refListStore->clear();
+  azul_refListStore->clear();
   for (unsigned int i = 0; i < imagen->vectorCapa.size(); ++i)
     {
       combo_add_item(imagen->vectorCapa[i]);
