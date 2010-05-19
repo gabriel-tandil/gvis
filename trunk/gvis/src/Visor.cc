@@ -23,7 +23,7 @@
 Visor::Visor() :
   Controlador("visor")
 {
-  imagen=NULL;
+  imagen = NULL;
   builder->get_widget("scrollHorizontal", scrollHorizontal);
   builder->get_widget("scrollVertical", scrollVertical);
   builder->get_widget("dibujo", dibujo);
@@ -45,8 +45,7 @@ Visor::Visor() :
       &Visor::on_configFalsoColor_clik));
   verCabecera->signal_activate().connect(sigc::mem_fun(*this,
       &Visor::on_verCabecera_clik));
-  salir->signal_activate().connect(sigc::mem_fun(*this,
-      &Visor::on_salir_clik));
+  salir->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_salir_clik));
   dibujo->signal_button_press_event().connect(sigc::mem_fun(*this,
       &Visor::on_dibujo_rClik));
   dibujo->signal_expose_event().connect(sigc::mem_fun(*pintorPrincipal,
@@ -98,11 +97,15 @@ Visor::on_dibujo_cambia_tamanio(Gtk::Allocation rec)
 
 }
 void
-Visor::ajustarMaximoDesplazamiento(){
-scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
-    - dibujo->get_width());
-scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
-    - dibujo->get_height());
+Visor::ajustarMaximoDesplazamiento()
+{
+  if (imagen)
+    {
+      scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
+          - dibujo->get_width());
+      scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
+          - dibujo->get_height());
+    }
 }
 
 bool
@@ -120,7 +123,7 @@ void
 Visor::on_salir_clik()
 {
 
- ventana->hide();
+  ventana->hide();
 }
 
 void
