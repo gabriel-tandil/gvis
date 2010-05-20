@@ -48,42 +48,46 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
   refGC1->set_rgb_fg_color(color);
   g_print("Redibujando %i,%i->%i,%i\n", evento->area.x, evento->area.y,
       evento->area.x + evento->area.width, evento->area.y + evento->area.height);
+  int id = desplazamientoY + evento->area.y;
+  int iid = desplazamientoX + evento->area.x;
   for (int i = evento->area.y; i < evento->area.height; i++)
-    for (int ii = evento->area.x; ii < evento->area.width; ii++)
-      {
-        //  g_print("Redibujando %i,%i\n", i, ii);
-        if (capaRoja >= 0)
-          {
-            Capa* c = imagen->vectorCapa[capaRoja];
-            //            Capa::RegistroBloque* rb = &c->datos[i];
-            //            Capa::TBloque b=rb->bloque[ii];
-            //           color.set_red(b >> 8);
-            //   gushort s=c->matriz[i][ii];
-            color.set_red(c->matriz[i + desplazamientoY][ii + desplazamientoX]
-                * 255);
-          }
-        if (capaVerde >= 0)
-          {
-            Capa* c = imagen->vectorCapa[capaVerde];
-            //            Capa::RegistroBloque* rb = &c->datos[i];
-            //            Capa::TBloque b=rb->bloque[ii];
-            //           color.set_red(b >> 8);
-            color.set_green(
-                c->matriz[i + desplazamientoY][ii + desplazamientoX] * 255);
-          }
-        if (capaAzul >= 0)
-          {
-            Capa* c = imagen->vectorCapa[capaAzul];
-            //            Capa::RegistroBloque* rb = &c->datos[i];
-            //            Capa::TBloque b=rb->bloque[ii];
-            //           color.set_red(b >> 8);
-            color.set_blue(c->matriz[i + desplazamientoY][ii + desplazamientoX]
-                * 255);
-          }
+    {
+      for (int ii = evento->area.x; ii < evento->area.width; ii++)
+        {
 
-        refGC1->set_rgb_fg_color(color);
-        dibujo->get_window()->draw_point(refGC1, ii, i);
-      }
+          //  g_print("Redibujando %i,%i\n", i, ii);
+          if (capaRoja >= 0)
+            {
+              Capa* c = imagen->vectorCapa[capaRoja];
+              //            Capa::RegistroBloque* rb = &c->datos[i];
+              //            Capa::TBloque b=rb->bloque[ii];
+              //           color.set_red(b >> 8);
+              //   gushort s=c->matriz[i][ii];
+              color.set_red(c->matriz[id][iid] * 255);
+            }
+          if (capaVerde >= 0)
+            {
+              Capa* c = imagen->vectorCapa[capaVerde];
+              //            Capa::RegistroBloque* rb = &c->datos[i];
+              //            Capa::TBloque b=rb->bloque[ii];
+              //           color.set_red(b >> 8);
+              color.set_green(c->matriz[id][iid] * 255);
+            }
+          if (capaAzul >= 0)
+            {
+              Capa* c = imagen->vectorCapa[capaAzul];
+              //            Capa::RegistroBloque* rb = &c->datos[i];
+              //            Capa::TBloque b=rb->bloque[ii];
+              //           color.set_red(b >> 8);
+              color.set_blue(c->matriz[id][iid] * 255);
+            }
+
+          refGC1->set_rgb_fg_color(color);
+          dibujo->get_window()->draw_point(refGC1, ii, i);
+          iid=desplazamientoX+ii;
+        }
+      id=desplazamientoY+i;
+    }
   return false;
 }
 
