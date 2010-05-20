@@ -49,9 +49,9 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
   g_print("Redibujando %i,%i->%i,%i\n", evento->area.x, evento->area.y,
       evento->area.x + evento->area.width, evento->area.y + evento->area.height);
   int id = desplazamientoY + evento->area.y;
-  int iid = desplazamientoX + evento->area.x;
   for (int i = evento->area.y; i < evento->area.height; i++)
     {
+      int iid = desplazamientoX + evento->area.x;
       for (int ii = evento->area.x; ii < evento->area.width; ii++)
         {
 
@@ -84,9 +84,9 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
 
           refGC1->set_rgb_fg_color(color);
           dibujo->get_window()->draw_point(refGC1, ii, i);
-          iid=desplazamientoX+ii;
+          iid++;
         }
-      id=desplazamientoY+i;
+      id++;
     }
   return false;
 }
