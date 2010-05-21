@@ -52,7 +52,7 @@ Visor::Visor() :
       &Pintor::on_dibujo_expose));
   dibujo->signal_size_allocate().connect(sigc::mem_fun(*this,
       &Visor::on_dibujo_cambia_tamanio));
-  pantallaCapas = new PantallaCapas();
+  pantallaCargarImagen = new PantallaCargarImagen();
   pantallaFalsoColor = new PantallaFalsoColor();
   scrollHorizontal->get_adjustment()->set_page_size(200);
   scrollHorizontal->get_adjustment()->set_step_increment(50);
@@ -141,7 +141,7 @@ Visor::on_abrir_clik()
     {
       imagen = new Imagen(dialog.get_filename());
     }
-  pantallaCapas->mostrar(imagen);
+  pantallaCargarImagen->mostrar(imagen);
   pintorPrincipal->setImagen(imagen);
 
   ajustarMaximoDesplazamiento();

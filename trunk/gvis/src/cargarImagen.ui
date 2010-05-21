@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="ventana">
-    <property name="title" translatable="yes">Seleccione Capas</property>
+    <property name="title" translatable="yes">Seleccione Bandas y Correcciones</property>
     <property name="modal">True</property>
     <child>
       <object class="GtkVBox" id="vbox4">
@@ -11,7 +11,7 @@
         <child>
           <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Seleccione las capas que desea cargar. (Luego puede cambiarse)</property>
+            <property name="label" translatable="yes">Seleccione las bandas que desea cargar. (Luego puede cambiarse)</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -19,7 +19,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkTreeView" id="listaCapas">
+          <object class="GtkTreeView" id="listaBandas">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="search_column">3</property>
@@ -118,7 +118,7 @@
             <property name="spacing">4</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="cancelar_seleccionCapas">
+              <object class="GtkButton" id="cancelar">
                 <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -132,7 +132,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="aceptar_seleccionCapas">
+              <object class="GtkButton" id="aceptar">
                 <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
