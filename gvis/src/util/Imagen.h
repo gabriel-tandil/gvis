@@ -20,20 +20,20 @@
 
 #ifndef IMAGEN_H_
 #define IMAGEN_H_
-#include "Capa.h"
+#include "Banda.h"
 #include "Cabecera.h"
 #include <glibmm.h>
-class Capa;
+class Banda;
 class Imagen
   {
 public:
-  typedef std::vector<Capa*> TVectorCapa;
+  typedef std::vector<Banda*> TVectorCapa;
   Imagen(Glib::ustring archivoCab);
   virtual ~Imagen();
-  void cargarCapas();
+  void cargarBandas();
   Glib::ustring getDirectorio();
-  int obtenerNumeroCapa(Glib::ustring cual);
-  TVectorCapa vectorCapa;
+  int obtenerNumeroBanda(Glib::ustring cual);
+  TVectorCapa vectorBanda;
   Cabecera* cabecera;
   gint8 tamanioBloque;
 

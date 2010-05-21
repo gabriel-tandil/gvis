@@ -37,7 +37,7 @@ public:
   virtual void on_aceptar_falsoColor_clik();
   virtual void on_cancelar_falsoColor_clik();
   void armarCombos();
-  void combo_add_item(const Capa* capa);
+  void combo_add_item(const Banda* capa);
   void mostrar(Pintor*p, Imagen* imagen);
   Glib::ustring get_active_text(Gtk::ComboBox* combo) const;
   Gtk::Button* aceptar_falsoColor;

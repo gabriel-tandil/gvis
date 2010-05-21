@@ -58,26 +58,26 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
           //  g_print("Redibujando %i,%i\n", i, ii);
           if (capaRoja >= 0)
             {
-              Capa* c = imagen->vectorCapa[capaRoja];
-              //            Capa::RegistroBloque* rb = &c->datos[i];
-              //            Capa::TBloque b=rb->bloque[ii];
+              Banda* c = imagen->vectorBanda[capaRoja];
+              //            Banda::RegistroBloque* rb = &c->datos[i];
+              //            Banda::TBloque b=rb->bloque[ii];
               //           color.set_red(b >> 8);
               //   gushort s=c->matriz[i][ii];
               color.set_red(c->matriz[id][iid] * 255);
             }
           if (capaVerde >= 0)
             {
-              Capa* c = imagen->vectorCapa[capaVerde];
-              //            Capa::RegistroBloque* rb = &c->datos[i];
-              //            Capa::TBloque b=rb->bloque[ii];
+              Banda* c = imagen->vectorBanda[capaVerde];
+              //            Banda::RegistroBloque* rb = &c->datos[i];
+              //            Banda::TBloque b=rb->bloque[ii];
               //           color.set_red(b >> 8);
               color.set_green(c->matriz[id][iid] * 255);
             }
           if (capaAzul >= 0)
             {
-              Capa* c = imagen->vectorCapa[capaAzul];
-              //            Capa::RegistroBloque* rb = &c->datos[i];
-              //            Capa::TBloque b=rb->bloque[ii];
+              Banda* c = imagen->vectorBanda[capaAzul];
+              //            Banda::RegistroBloque* rb = &c->datos[i];
+              //            Banda::TBloque b=rb->bloque[ii];
               //           color.set_red(b >> 8);
               color.set_blue(c->matriz[id][iid] * 255);
             }

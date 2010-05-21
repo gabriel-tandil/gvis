@@ -18,9 +18,9 @@
  * along with gvis.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Capa.h"
+#include "Banda.h"
 
-Capa::Capa(Glib::ustring nom, bool carga, Imagen* i)
+Banda::Banda(Glib::ustring nom, bool carga, Imagen* i)
 {
   imagen = i;
   nombre = nom;
@@ -29,12 +29,12 @@ Capa::Capa(Glib::ustring nom, bool carga, Imagen* i)
   altoVista = 100;
 }
 
-//Capa::Capa(const Capa &capa){
+//Banda::Banda(const Banda &capa){
 //
 //}
 
 void
-Capa::cargarCapa()
+Banda::cargarCapa()
 {
   srand(time(NULL));
   if (cargada)
@@ -109,7 +109,7 @@ Capa::cargarCapa()
       //        fclose(f);
     }
 }
-Capa::~Capa()
+Banda::~Banda()
 {
   for (int i = 0; i < imagen->cabecera->alto; i++)
     {

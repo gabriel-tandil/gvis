@@ -19,98 +19,98 @@
  */
 
 #include "PantallaFalsoColor.h"
-#include "PantallaCapas.h"
+#include "PantallaCargarImagen.h"
 #include <stdio.h>
 
-PantallaCapas::PantallaCapas() :
-  Controlador("capas")
+PantallaCargarImagen::PantallaCargarImagen() :
+  Controlador("cargarImagen")
 {
-  builder->get_widget("listaCapas", listaCapas);
-  builder->get_widget("aceptar_seleccionCapas", aceptar_seleccionCapas);
-  builder->get_widget("cancelar_seleccionCapas", cancelar_seleccionCapas);
-  aceptar_seleccionCapas->signal_clicked().connect(sigc::mem_fun(*this,
-      &PantallaCapas::on_aceptar_seleccionCapas_clik));
-  cancelar_seleccionCapas->signal_clicked().connect(sigc::mem_fun(*this,
-      &PantallaCapas::on_cancelar_seleccionCapas_clik));
+  builder->get_widget("listaBandas", listaBandas);
+  builder->get_widget("aceptar", aceptar);
+  builder->get_widget("cancelar", cancelar);
+  aceptar->signal_clicked().connect(sigc::mem_fun(*this,
+      &PantallaCargarImagen::on_aceptar_clik));
+  cancelar->signal_clicked().connect(sigc::mem_fun(*this,
+      &PantallaCargarImagen::on_cancelar_clik));
   ventana->signal_show().connect(sigc::mem_fun(*this,
-      &PantallaCapas::on_ventana_show));
+      &PantallaCargarImagen::on_ventana_show));
 
 }
 
 void
-PantallaCapas::mostrar(Imagen* img)
+PantallaCargarImagen::mostrar(Imagen* img)
 {
   imagen = img;
-  listaCapas->remove_all_columns();
-  armarListaCapas(imagen);
+  listaBandas->remove_all_columns();
+  armarListaBandas(imagen);
   add_columns(); // no se porque si no agrego las columnas despues de armar la lista de capas no quedan editables
   //por eso las saco y las pongo
   ventana->show();
 }
 
 void
-PantallaCapas::on_ventana_show()
+PantallaCargarImagen::on_ventana_show()
 {
 
 }
 
 void
-PantallaCapas::on_aceptar_seleccionCapas_clik()
+PantallaCargarImagen::on_aceptar_clik()
 {
-  Glib::RefPtr<Gtk::TreeModel> refModel = listaCapas->_get_base_model();
-  for (unsigned int var = 0; var < imagen->vectorCapa.size(); ++var)
+  Glib::RefPtr<Gtk::TreeModel> refModel = listaBandas->_get_base_model();
+  for (unsigned int var = 0; var < imagen->vectorBanda.size(); ++var)
     {
       char cad[255];
       sprintf(cad, "%6d", var);
       Gtk::TreeModel::iterator iter = refModel->get_iter(Glib::ustring(cad));
       Gtk::TreeRow row = *iter;
-      imagen->vectorCapa[var]->cargada = row[m_columns.cargada];
+      imagen->vectorBanda[var]->cargada = row[m_columns.cargada];
     }
 
-  imagen->cargarCapas();
+  imagen->cargarBandas();
   ventana->hide();
 }
 
 void
-PantallaCapas::on_cancelar_seleccionCapas_clik()
+PantallaCargarImagen::on_cancelar_clik()
 {
   ventana->hide();
 }
 
 void
-PantallaCapas::armarListaCapas(Imagen* imagen)
+PantallaCargarImagen::armarListaBandas(Imagen* imagen)
 {
 
   m_refListStore = Gtk::ListStore::create(m_columns);
 
-  for (unsigned int i = 0; i < imagen->vectorCapa.size(); ++i)
+  for (unsigned int i = 0; i < imagen->vectorBanda.size(); ++i)
     {
-      liststore_add_item(imagen->vectorCapa[i]);
+      liststore_add_item(imagen->vectorBanda[i]);
     }
-  //    std::for_each(imagen->vectorCapa.begin(), imagen->vectorCapa.end(),
+  //    std::for_each(imagen->vectorBanda.begin(), imagen->vectorBanda.end(),
   //        sigc::mem_fun(*this, &PantallaCapas::liststore_add_item));
-  listaCapas->set_model(m_refListStore);
+  listaBandas->set_model(m_refListStore);
 
 }
 
 void
-PantallaCapas::add_columns()
+PantallaCargarImagen::add_columns()
 {
 
-  int cols_count = listaCapas->append_column_editable("¿Cargada?",
+  int cols_count = listaBandas->append_column_editable("¿Cargada?",
       m_columns.cargada);
-  Gtk::TreeViewColumn* pColumn = listaCapas->get_column(cols_count - 1);
+  Gtk::TreeViewColumn* pColumn = listaBandas->get_column(cols_count - 1);
 
   pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
   pColumn->set_fixed_width(80);
   pColumn->set_clickable();
 
-  listaCapas->append_column("Nombre", m_columns.nombre);
+  listaBandas->append_column("Nombre", m_columns.nombre);
 
 }
 
 void
-PantallaCapas::liststore_add_item(const Capa* foo)
+PantallaCargarImagen::liststore_add_item(const Banda* foo)
 {
   Gtk::TreeRow row = *(m_refListStore->append());
 
@@ -118,6 +118,6 @@ PantallaCapas::liststore_add_item(const Capa* foo)
   row[m_columns.nombre] = foo->nombre;
 }
 
-PantallaCapas::~PantallaCapas()
+PantallaCargarImagen::~PantallaCargarImagen()
 {
 }

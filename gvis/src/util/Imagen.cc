@@ -30,16 +30,16 @@ Imagen::Imagen(Glib::ustring archivoCab)
     fclose(f);
     for (unsigned int i = 0; i < cabecera->getBandasPresentes().length(); ++i)
       {
-      Capa* c=new Capa(cabecera->getBandasPresentes().substr(i, 1),false, this);
-        vectorCapa.push_back(c);
+      Banda* c=new Banda(cabecera->getBandasPresentes().substr(i, 1),false, this);
+        vectorBanda.push_back(c);
       }
   }
 
-void Imagen::cargarCapas()
+void Imagen::cargarBandas()
   {
-    for (unsigned int i = 0; i < vectorCapa.size(); i++)
+    for (unsigned int i = 0; i < vectorBanda.size(); i++)
       {
-        vectorCapa[i]->cargarCapa();
+        vectorBanda[i]->cargarCapa();
       }
   }
 
@@ -57,9 +57,9 @@ Glib::ustring Imagen::getDirectorio()
 
     return cadena;
   }
-int Imagen::obtenerNumeroCapa(Glib::ustring cual){
-  for (unsigned int var = 0; var < vectorCapa.size(); ++var) {
-    if (vectorCapa[var]->nombre==cual)
+int Imagen::obtenerNumeroBanda(Glib::ustring cual){
+  for (unsigned int var = 0; var < vectorBanda.size(); ++var) {
+    if (vectorBanda[var]->nombre==cual)
       return var;
   }
   return -1;

@@ -67,11 +67,11 @@ PantallaFalsoColor::on_ventana_show()
 void
 PantallaFalsoColor::on_aceptar_falsoColor_clik()
 {
-  pintor->falsoColor.rojo = imagen->obtenerNumeroCapa(get_active_text(
+  pintor->falsoColor.rojo = imagen->obtenerNumeroBanda(get_active_text(
       falsoColorRojo));
-  pintor->falsoColor.verde = imagen->obtenerNumeroCapa(get_active_text(
+  pintor->falsoColor.verde = imagen->obtenerNumeroBanda(get_active_text(
       falsoColorVerde));
-  pintor->falsoColor.azul = imagen->obtenerNumeroCapa(get_active_text(
+  pintor->falsoColor.azul = imagen->obtenerNumeroBanda(get_active_text(
       falsoColorAzul));
 
   ventana->hide();
@@ -89,15 +89,15 @@ PantallaFalsoColor::armarCombos()
   rojo_refListStore->clear();
   verde_refListStore->clear();
   azul_refListStore->clear();
-  for (unsigned int i = 0; i < imagen->vectorCapa.size(); ++i)
+  for (unsigned int i = 0; i < imagen->vectorBanda.size(); ++i)
     {
-      combo_add_item(imagen->vectorCapa[i]);
+      combo_add_item(imagen->vectorBanda[i]);
     }
 
 }
 
 void
-PantallaFalsoColor::combo_add_item(const Capa* capa)
+PantallaFalsoColor::combo_add_item(const Banda* capa)
 {
   if (capa->cargada)
     {

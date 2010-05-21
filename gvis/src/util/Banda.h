@@ -24,14 +24,14 @@
 #include "Imagen.h"
 
 class Imagen; //forward
-class Capa
+class Banda
 {
 public:
 
-  Capa(Glib::ustring, bool, Imagen*);
-  //  Capa(const Capa &capa);
+  Banda(Glib::ustring, bool, Imagen*);
+  //  Banda(const Banda &capa);
   virtual
-  ~Capa();
+  ~Banda();
   void
   cargarCapa();
   Glib::ustring nombre;

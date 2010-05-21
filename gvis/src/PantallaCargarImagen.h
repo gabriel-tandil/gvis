@@ -26,26 +26,26 @@
 #include "Controlador.h"
 
 
-class PantallaCapas : public Controlador
+class PantallaCargarImagen : public Controlador
   {
 public:
 
-  PantallaCapas();
-  virtual ~PantallaCapas();
+  PantallaCargarImagen();
+  virtual ~PantallaCargarImagen();
 
 
   virtual void on_ventana_show();
-  virtual void on_aceptar_seleccionCapas_clik();
-  virtual void on_cancelar_seleccionCapas_clik();
-  void armarListaCapas(Imagen* imagen);
+  virtual void on_aceptar_clik();
+  virtual void on_cancelar_clik();
+  void armarListaBandas(Imagen* imagen);
   void mostrar(Imagen* imagen);
-  Gtk::Button* aceptar_seleccionCapas;
-  Gtk::Button* cancelar_seleccionCapas;
-  Gtk::TreeView* listaCapas;
+  Gtk::Button* aceptar;
+  Gtk::Button* cancelar;
+  Gtk::TreeView* listaBandas;
   Imagen* imagen;
   Glib::RefPtr<Gtk::ListStore> m_refListStore;
   void add_columns();
-  void liststore_add_item(const Capa* foo);
+  void liststore_add_item(const Banda* foo);
 
   struct ModelColumns : public Gtk::TreeModel::ColumnRecord
     {

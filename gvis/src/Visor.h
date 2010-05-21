@@ -23,7 +23,7 @@
 
 #include <gtkmm.h>
 #include "util/Imagen.h"
-#include "PantallaCapas.h"
+#include "PantallaCargarImagen.h"
 #include "PantallaFalsoColor.h"
 #include "Controlador.h"
 
@@ -63,7 +63,7 @@ public:
   Gtk::HScrollbar* scrollHorizontal;
   Gtk::DrawingArea* dibujo;
   Gtk::Window* ventanaCabecera;
-  PantallaCapas* pantallaCapas;
+  PantallaCargarImagen* pantallaCargarImagen;
   PantallaFalsoColor* pantallaFalsoColor;
 
   Imagen* imagen;
