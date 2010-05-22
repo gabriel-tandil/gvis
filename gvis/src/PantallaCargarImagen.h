@@ -33,7 +33,6 @@ public:
   PantallaCargarImagen();
   virtual ~PantallaCargarImagen();
 
-
   virtual void on_ventana_show();
   virtual void on_aceptar_clik();
   virtual void on_cancelar_clik();
@@ -42,6 +41,10 @@ public:
   Gtk::Button* aceptar;
   Gtk::Button* cancelar;
   Gtk::TreeView* listaBandas;
+  Gtk::RadioButton* nd;
+  Gtk::RadioButton* l;
+  Gtk::RadioButton* lr;
+  Gtk::RadioButton* rho;
   Imagen* imagen;
   Glib::RefPtr<Gtk::ListStore> m_refListStore;
   void add_columns();

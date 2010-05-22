@@ -24,23 +24,37 @@
 #include <stdio.h>
 
 class Cabecera
-  {
+{
 public:
   Cabecera();
   Cabecera(const Cabecera&);
-  void cargarArchivo(Glib::ustring);
-  virtual ~Cabecera();
-  static Cabecera* crearCabecera(FILE* f);
-  static Glib::ustring buscar(Glib::ustring texto, Glib::ustring tag);
-  static Glib::ustring buscar(Glib::ustring texto, Glib::ustring tag, unsigned int ocurrencia, Glib::ustring separador);
-  Glib::ustring getBandasPresentes();
-  Glib::ustring getTexto();
-  Glib::Date::Date getFecha();
+  void
+  cargarArchivo(Glib::ustring);
+  virtual
+  ~Cabecera();
+  static Cabecera*
+  crearCabecera(FILE* f);
+  static Glib::ustring
+  buscar(Glib::ustring texto, Glib::ustring tag);
+  static Glib::ustring
+  buscar(Glib::ustring texto, Glib::ustring tag, unsigned int ocurrencia,
+      Glib::ustring separador);
+  Glib::ustring
+  getBandasPresentes();
+  Glib::ustring
+  getTexto();
+  Glib::Date::Date
+  getFecha();
   enum
-    {// satelites
-      L5, L7
-    };
-  virtual Glib::ustring obtieneNombreArchivoCapa(Glib::ustring);//TODO: llevar a una jerarquia de capas por satelite
+  {// satelites
+    L5, L7
+  };
+  enum
+  {// gain/bias
+    GAIN, BIAS
+  };
+  virtual Glib::ustring
+  obtieneNombreArchivoCapa(Glib::ustring);//TODO: llevar a una jerarquia de capas por satelite
   guint16 ancho;
   guint16 alto;
 protected:
@@ -50,11 +64,18 @@ protected:
   Glib::ustring tagAlto;
   Glib::ustring tagTamanioPixel;
   Glib::ustring tagBandas;
+  Glib::ustring tagGainsBiases;
+  Glib::ustring tagTitaSol;
+  Glib::ustring tagPhiSol;
+  gfloat titaSol;
+  gfloat PhiSol;
+  gfloat GainBias[10][2];
+
   Glib::ustring texto;
   guint8 satelite;
   Glib::Date::Date fecha;
   gfloat tamanioPixel;
   Glib::ustring bandasPresentes;
-  };
+};
 
 #endif /*CABECERA_H_*/
