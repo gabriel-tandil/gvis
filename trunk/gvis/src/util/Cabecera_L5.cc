@@ -27,10 +27,13 @@ Cabecera_L5::Cabecera_L5() :
     tagAncho="PIXELS PER LINE= ";
     tagAlto="LINES PER IMAGE= ";
     tagTamanioPixel="PIXEL SIZE =";
+    tagGainsBiases="GAINS/BIASES =  ";
+    tagTitaSol="SUN ELEVATION =";
+    tagPhiSol="SUN AZIMUTH = ";
   }
 
-Glib::ustring Cabecera_L5::obtieneNombreArchivoCapa(Glib::ustring nombreCapa){
-  return "BAND"+nombreCapa+".dat";
+Glib::ustring Cabecera_L5::obtieneNombreArchivoCapa(Glib::ustring nombreBanda){
+  return "BAND"+nombreBanda+".dat";
 }
 
 Cabecera_L5::~Cabecera_L5()

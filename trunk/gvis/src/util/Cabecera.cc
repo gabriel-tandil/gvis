@@ -21,6 +21,7 @@
 #include "Cabecera.h"
 #include "Cabecera_L5.h"
 #include "Cabecera_L7.h"
+
 Cabecera::Cabecera()
 {
   tagSatelite = "SATELLITE =";
@@ -54,7 +55,24 @@ Cabecera::cargarArchivo(Glib::ustring tex)
   cadena = buscar(texto, tagTamanioPixel);
   tamanioPixel = atof(cadena.c_str());
 
+  cadena = buscar(texto, tagTitaSol);
+  titaSol = atof(cadena.c_str());
+
+  cadena = buscar(texto, tagPhiSol);
+  PhiSol = atof(cadena.c_str());
+
   bandasPresentes = buscar(texto, tagBandas);
+
+  cadena = buscar(texto, tagGainsBiases, 0, " VOLUME");
+
+  std::vector<Glib::ustring> vLines = Glib::Regex::split_simple("  ", cadena);
+  for (unsigned int i = 0; i < vLines.size(); i++)
+    {
+      int cSeparador = vLines.at(i).find_first_of('/');
+      GainBias[i][GAIN] = atof((vLines.at(i).substr(0, cSeparador)).c_str());
+      GainBias[i][BIAS] = atof((vLines.at(i).substr(cSeparador,
+          vLines.at(i).length() - cSeparador)).c_str());
+    }
 
   //g_print("%d %d %d",atoi(cadena.substr(6,2).c_str()),atoi(cadena.substr(4,2).c_str()),atoi(cadena.substr(0,4).c_str()));
 }
@@ -97,17 +115,15 @@ Glib::ustring
 Cabecera::buscar(Glib::ustring texto, Glib::ustring tag,
     unsigned int ocurrencia, Glib::ustring separador)
 {
-  //Glib::ustring::size_type antesDeBuscar;
   Glib::ustring::size_type inicio = 0;
   for (unsigned int i = 0; i <= ocurrencia; ++i)
     {
-      //  antesDeBuscar=in
       inicio = texto.find(tag, inicio) + tag.length();
     }
   if (inicio == 0)
     return NULL;
-  Glib::ustring cadena = texto.substr(inicio, texto.find_first_of(separador,
-      inicio) - inicio);
+  Glib::ustring cadena = texto.substr(inicio, texto.find(separador, inicio)
+      - inicio);
 
   return cadena;
 }
