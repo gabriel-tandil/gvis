@@ -34,7 +34,7 @@ Banda::Banda(Glib::ustring nom, bool carga, Imagen* i)
 //}
 
 void
-Banda::cargarCapa()
+Banda::cargarBanda()
 {
   srand(time(NULL));
   if (cargada)
@@ -71,6 +71,8 @@ Banda::cargarCapa()
           g_print(imagen->cabecera->obtieneNombreArchivoCapa(nombre).c_str());
         }
       fclose(f);
+
+
 
       //        int tama = imagen->cabecera->ancho * imagen->cabecera->alto;
       //        int salto =0 /*std::min(imagen->cabecera->ancho, imagen->cabecera->alto)
