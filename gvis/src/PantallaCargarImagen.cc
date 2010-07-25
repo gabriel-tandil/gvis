@@ -28,10 +28,10 @@ PantallaCargarImagen::PantallaCargarImagen() :
   builder->get_widget("listaBandas", listaBandas);
   builder->get_widget("aceptar", aceptar);
   builder->get_widget("cancelar", cancelar);
-  builder->get_widget("ND",nd);
-  builder->get_widget("L",l);
-  builder->get_widget("LR",lr);
-  builder->get_widget("RHO",rho);
+  builder->get_widget("ND", nd);
+  builder->get_widget("L", l);
+  builder->get_widget("LR", lr);
+  builder->get_widget("RHO", rho);
   aceptar->signal_clicked().connect(sigc::mem_fun(*this,
       &PantallaCargarImagen::on_aceptar_clik));
   cancelar->signal_clicked().connect(sigc::mem_fun(*this,
@@ -72,6 +72,9 @@ PantallaCargarImagen::on_aceptar_clik()
     }
 
   imagen->cargarBandas();
+  if (l->get_active())
+    imagen->corregirL();
+
   ventana->hide();
 }
 
