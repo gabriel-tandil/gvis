@@ -33,6 +33,7 @@ main (int argc, char *argv[])
 {
 	Gtk::Main kit(argc, argv);
 	Visor visor;
+        setlocale( LC_ALL, "C"  );
 
 	kit.run(visor.get_window());
 
