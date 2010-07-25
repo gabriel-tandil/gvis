@@ -53,10 +53,16 @@ public:
   {// gain/bias
     GAIN, BIAS
   };
+  struct TGainBias
+  {
+    gfloat gain;
+    gfloat bias;
+  };
   virtual Glib::ustring
   obtieneNombreArchivoCapa(Glib::ustring);//TODO: llevar a una jerarquia de capas por satelite
   guint16 ancho;
   guint16 alto;
+  std::vector<TGainBias> gainBias;
 protected:
   Glib::ustring tagSatelite;
   Glib::ustring tagFecha;
@@ -68,8 +74,7 @@ protected:
   Glib::ustring tagTitaSol;
   Glib::ustring tagPhiSol;
   gfloat titaSol;
-  gfloat PhiSol;
-  gfloat GainBias[10][2];
+  gfloat phiSol;
 
   Glib::ustring texto;
   guint8 satelite;
