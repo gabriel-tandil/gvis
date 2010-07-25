@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with gvis.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <stdlib.h>
+#include <locale.h>
 
 #include "Cabecera.h"
 #include "Cabecera_L5.h"
@@ -59,7 +61,7 @@ Cabecera::cargarArchivo(Glib::ustring tex)
   titaSol = atof(cadena.c_str());
 
   cadena = buscar(texto, tagPhiSol);
-  PhiSol = atof(cadena.c_str());
+  phiSol = atof(cadena.c_str());
 
   bandasPresentes = buscar(texto, tagBandas);
 
@@ -69,9 +71,10 @@ Cabecera::cargarArchivo(Glib::ustring tex)
   for (unsigned int i = 0; i < vLines.size(); i++)
     {
       int cSeparador = vLines.at(i).find_first_of('/');
-      GainBias[i][GAIN] = atof((vLines.at(i).substr(0, cSeparador)).c_str());
-      GainBias[i][BIAS] = atof((vLines.at(i).substr(cSeparador,
-          vLines.at(i).length() - cSeparador)).c_str());
+      TGainBias gb;
+      gb.gain = strtod((vLines.at(i).substr(0, cSeparador)).c_str(), NULL);
+      gb.bias = strtod((vLines.at(i).substr(++cSeparador, vLines.at(i).length()-cSeparador)).c_str(),NULL);
+      gainBias.push_back(gb);
     }
 
   //g_print("%d %d %d",atoi(cadena.substr(6,2).c_str()),atoi(cadena.substr(4,2).c_str()),atoi(cadena.substr(0,4).c_str()));
@@ -131,7 +134,6 @@ Cabecera::buscar(Glib::ustring texto, Glib::ustring tag,
 Glib::ustring
 Cabecera::buscar(Glib::ustring texto, Glib::ustring tag)
 {
-
   return buscar(texto, tag, 0, " ");
 }
 Glib::ustring
