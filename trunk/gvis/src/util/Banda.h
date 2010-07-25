@@ -33,7 +33,7 @@ public:
   virtual
   ~Banda();
   void
-  cargarCapa();
+  cargarBanda();
   Glib::ustring nombre;
   gint16 anchoVista;
   gint16 altoVista;
