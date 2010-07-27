@@ -18,8 +18,8 @@
  * along with gvis.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CAPA_H_
-#define CAPA_H_
+#ifndef BANDA_H_
+#define BANDA_H_
 #include <glibmm.h>
 #include "Imagen.h"
 
@@ -51,4 +51,4 @@ private:
 
 };
 
-#endif /*CAPA_H_*/
+#endif /*BANDA_H_*/
