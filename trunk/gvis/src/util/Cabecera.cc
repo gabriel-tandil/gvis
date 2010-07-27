@@ -18,7 +18,6 @@
  * along with gvis.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <locale.h>
 
 #include "Cabecera.h"
 #include "Cabecera_L5.h"
@@ -55,13 +54,13 @@ Cabecera::cargarArchivo(Glib::ustring tex)
   alto = atoi(cadena.c_str());
 
   cadena = buscar(texto, tagTamanioPixel);
-  tamanioPixel = atof(cadena.c_str());
+  tamanioPixel = strtod(cadena.c_str(), NULL);
 
   cadena = buscar(texto, tagTitaSol);
-  titaSol = atof(cadena.c_str());
+  titaSol = strtod(cadena.c_str(), NULL);
 
   cadena = buscar(texto, tagPhiSol);
-  phiSol = atof(cadena.c_str());
+  phiSol = strtod(cadena.c_str(), NULL);
 
   bandasPresentes = buscar(texto, tagBandas);
 
@@ -73,11 +72,12 @@ Cabecera::cargarArchivo(Glib::ustring tex)
       int cSeparador = vLines.at(i).find_first_of('/');
       TGainBias gb;
       gb.gain = strtod((vLines.at(i).substr(0, cSeparador)).c_str(), NULL);
-      gb.bias = strtod((vLines.at(i).substr(++cSeparador, vLines.at(i).length()-cSeparador)).c_str(),NULL);
+      cSeparador++;
+      gb.bias = strtod((vLines.at(i).substr(cSeparador, vLines.at(i).length()
+          - cSeparador)).c_str(), NULL);
       gainBias.push_back(gb);
     }
 
-  //g_print("%d %d %d",atoi(cadena.substr(6,2).c_str()),atoi(cadena.substr(4,2).c_str()),atoi(cadena.substr(0,4).c_str()));
 }
 
 Cabecera*
