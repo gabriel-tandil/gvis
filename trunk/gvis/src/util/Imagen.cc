@@ -51,83 +51,39 @@ Imagen::corregirL()
 
   gfloat maxAj = -1000;
   gfloat minAj = 1000;
-  int maxiAj, miniAj, maxiiAj, maxiiiAj, miniiAj, miniiiAj;
 
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
-        guint8 max = 0;
-        guint8 min = 255;
-        int maxii, maxiii, minii, miniii;
-        for (int ii = 0; ii < cabecera->alto; ii++)
-          for (int iii = 0; iii < cabecera->ancho; iii++)
-            {
-              if (vectorBanda[i]->matriz[ii][iii] > max)
-                {
-                  max = vectorBanda[i]->matriz[ii][iii];
-                  maxii = ii;
-                  maxiii = iii;
-                }
-              if (vectorBanda[i]->matriz[ii][iii] < min)
-                {
-                  min = vectorBanda[i]->matriz[ii][iii];
-                  minii = ii;
-                  miniii = iii;
-                }
-            }
-        gfloat maxTemp = max * cabecera->gainBias[i].gain
+        // todo: siempre seran 0 y 255 los max y min ND de cada banda?
+        gfloat maxBanda = 255 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
-        gfloat minTemp = min * cabecera->gainBias[i].gain
-            + cabecera->gainBias[i].bias;
-        if (maxTemp > maxAj)
-          {
-            maxAj = maxTemp;
-            maxiiAj = maxii;
-            maxiiiAj = maxiii;
-            maxiAj = i;
-          }
-        if (minTemp < minAj)
-          {
-            minAj = minTemp;
-            miniiAj = minii;
-            miniiiAj = miniii;
-            miniAj = i;
-          }
-      }
+        gfloat minBanda = cabecera->gainBias[i].bias;
+        if (maxBanda > maxAj)
+          maxAj = maxBanda;
 
-  gfloat bc = 255 / (1 - (maxAj / minAj));
-  gfloat gc = (255 - bc) / maxAj;
-//  g_print("max: %f min: %f \n", (max,min,gc,bc);
+        if (minBanda < minAj)
+          minAj = minBanda;
+      }
+  // calculo un gain y un bias para normalizar a 255
+  gfloat bNorm = 255 / (1 - (maxAj / minAj));
+  gfloat gNorm = (255 - bNorm) / maxAj;
+
+  //  g_print("max: %f min: %f \n", (max,min,gc,bc);
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     {
       if (vectorBanda[i]->cargada)
         {
-
-          //   gfloat **matrizT;
-          //     matrizT = new gfloat*[imagen->cabecera->alto];
+          //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
+          gfloat bAjustado = cabecera->gainBias[i].bias * gNorm + bNorm;
+          gfloat gAjustado = (cabecera->gainBias[i].gain
+              + cabecera->gainBias[i].bias) * gNorm + bNorm - bAjustado;
           for (int ii = 0; ii < cabecera->alto; ii++)
             {
-              //       matrizT[i] = new gfloat[imagen->cabecera->ancho];
               for (int iii = 0; iii < cabecera->ancho; iii++)
                 {
-//                  if ((vectorBanda[i]->matriz[ii][iii]
-//                      * cabecera->gainBias[i].gain + cabecera->gainBias[i].bias)
-//                      * gc + bc > 255)
-//                    {
-//                      g_print("L:%f nd:%i G:%f B:%f g:%f b:%f\n", (vectorBanda[i]->matriz[ii][iii]
-//                          * cabecera->gainBias[i].gain
-//                          + cabecera->gainBias[i].bias) * gc + bc,
-//                          vectorBanda[i]->matriz[ii][iii],
-//                          cabecera->gainBias[i].gain,
-//                          cabecera->gainBias[i].bias,
-//                          gc,
-//                          bc);
-//                    }
                   vectorBanda[i]->matriz[ii][iii]
-                      = (vectorBanda[i]->matriz[ii][iii]
-                          * cabecera->gainBias[i].gain
-                          + cabecera->gainBias[i].bias) * gc + bc;
-
+                      = vectorBanda[i]->matriz[ii][iii] * gAjustado + bAjustado;
                 }
             }
         }
