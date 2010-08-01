@@ -31,7 +31,15 @@ public:
   Imagen(Glib::ustring archivoCab);
   virtual ~Imagen();
   void cargarBandas();
+
+  // imagen en radiancia
   void corregirL();
+
+  // imagen en radiancia Rayleigh
+  void corregirLR();
+
+  // imagen en reflactancia Rayleigh
+  void corregirRHO();
   Glib::ustring getDirectorio();
   int obtenerNumeroBanda(Glib::ustring cual);
   TVectorCapa vectorBanda;

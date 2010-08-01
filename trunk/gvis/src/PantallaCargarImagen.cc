@@ -74,6 +74,10 @@ PantallaCargarImagen::on_aceptar_clik()
   imagen->cargarBandas();
   if (l->get_active())
     imagen->corregirL();
+  if (lr->get_active())
+    imagen->corregirLR();
+  if (rho->get_active())
+    imagen->corregirRHO();
 
   ventana->hide();
 }

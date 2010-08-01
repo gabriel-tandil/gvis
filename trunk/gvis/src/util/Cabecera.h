@@ -45,6 +45,11 @@ public:
   getTexto();
   Glib::Date::Date
   getFecha();
+  gfloat
+  getTitaSol();
+  gfloat
+  getPhiSol();
+
   enum
   {// satelites
     L5, L7
