@@ -154,6 +154,17 @@ Cabecera::getFecha()
   return fecha;
 }
 
+gfloat
+Cabecera::getPhiSol()
+{
+  return phiSol;
+}
+gfloat
+Cabecera::getTitaSol()
+{
+  return titaSol;
+}
+
 Cabecera::~Cabecera()
 {
   delete &fecha;

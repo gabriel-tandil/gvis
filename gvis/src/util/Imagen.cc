@@ -19,6 +19,9 @@
  */
 
 #include "Imagen.h"
+#include <math.h>
+
+#define PI 3.14159265
 
 Imagen::Imagen(Glib::ustring archivoCab)
 {
@@ -89,6 +92,84 @@ Imagen::corregirL()
         }
     }
 }
+
+void
+Imagen::corregirLR()
+{
+
+  gfloat d = 1 - 0.0167 * cos(
+      (2 * PI * (cabecera->getFecha().get_julian() - 3)) / 365);
+
+  gfloat titaSat = 0;
+  gfloat titaSol = 90 - cabecera->getTitaSol();
+  gfloat phiSat = 0;
+  gfloat phiSol = cabecera->getPhiSol();
+
+  titaSat = titaSat * PI / 180;
+  phiSat = phiSat * PI / 180;
+  titaSol = titaSol * PI / 180;
+  phiSol = phiSol * PI / 180;
+
+  gfloat cosenoMas = cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(titaSol)
+      * cos(phiSat - phiSol);
+  gfloat cosenoMenos = -cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(
+      titaSol) * cos(phiSat - phiSol);
+
+  gfloat faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
+  gfloat faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
+
+//  Lr[1] := ((E0[1] * Tr[1]) / (4 * Pi * r* r * Cos(TitaSat))) *
+//          (Exp(-Tg[1]/Cos(TitaSat))) * (Exp(-Tg[1]/Cos(TitaSol))) *
+//          (FaseMenos + 0.052 * FaseMas);
+
+
+  gfloat maxAj = -1000;
+  gfloat minAj = 1000;
+
+  for (unsigned int i = 0; i < vectorBanda.size(); i++)
+    if (vectorBanda[i]->cargada)
+      {
+        // todo: siempre seran 0 y 255 los max y min ND de cada banda?
+        gfloat maxBanda = 255 * cabecera->gainBias[i].gain
+            + cabecera->gainBias[i].bias;
+        gfloat minBanda = cabecera->gainBias[i].bias;
+        if (maxBanda > maxAj)
+          maxAj = maxBanda;
+
+        if (minBanda < minAj)
+          minAj = minBanda;
+      }
+  // calculo un gain y un bias para normalizar a 255
+  gfloat bNorm = 255 / (1 - (maxAj / minAj));
+  gfloat gNorm = (255 - bNorm) / maxAj;
+
+  //  g_print("max: %f min: %f \n", (max,min,gc,bc);
+  for (unsigned int i = 0; i < vectorBanda.size(); i++)
+    {
+      if (vectorBanda[i]->cargada)
+        {
+          //calculo nuevos b y g para ajustar la radiancia y normalizar en un solo paso
+          gfloat bAjustado = cabecera->gainBias[i].bias * gNorm + bNorm;
+          gfloat gAjustado = (cabecera->gainBias[i].gain
+              + cabecera->gainBias[i].bias) * gNorm + bNorm - bAjustado;
+          for (int ii = 0; ii < cabecera->alto; ii++)
+            {
+              for (int iii = 0; iii < cabecera->ancho; iii++)
+                {
+                  vectorBanda[i]->matriz[ii][iii]
+                      = vectorBanda[i]->matriz[ii][iii] * gAjustado + bAjustado;
+                }
+            }
+        }
+    }
+}
+
+void
+Imagen::corregirRHO()
+{
+
+}
+
 Glib::ustring
 Imagen::getDirectorio()
 {
