@@ -23,6 +23,34 @@
 Cabecera_L5::Cabecera_L5() :
   Cabecera()
   {
+/*
+  Landsat 5
+  solct
+  1957
+  1829
+  1557
+  1047
+  219,3
+
+Landsat 5
+Taur
+0,1543
+0,0812
+0,0451
+0,0174
+0,0011
+
+Taug
+0,01
+0,03
+0,02
+0,02
+0
+
+
+
+*/
+
     satelite=L5;
     tagAncho="PIXELS PER LINE= ";
     tagAlto="LINES PER IMAGE= ";

@@ -122,6 +122,7 @@ Imagen::corregirLR()
 //          (Exp(-Tg[1]/Cos(TitaSat))) * (Exp(-Tg[1]/Cos(TitaSol))) *
 //          (FaseMenos + 0.052 * FaseMas);
 
+  //  Ro1[i,j] := (d*d*PI* (LSat1[i,j] - Lr[1]))/(cos(TitaSol)* E0[1]);
 
   gfloat maxAj = -1000;
   gfloat minAj = 1000;

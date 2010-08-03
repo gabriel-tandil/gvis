@@ -23,6 +23,25 @@
 Cabecera_L7::Cabecera_L7() :
   Cabecera()
   {
+  /*
+Landsat 7
+solct
+1970
+1843
+1555
+1047
+227,1
+
+Landsat 7
+Taur
+0,17
+0,09
+0,05
+0,02
+0
+
+   */
+
     satelite=L7;
     tagAncho="PIXELS PER LINE =";
     tagAlto="LINES PER BAND =";
