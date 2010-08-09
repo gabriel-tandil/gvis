@@ -118,11 +118,7 @@ Imagen::corregirRHO()
   gfloat faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
   gfloat faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
 
-  gfloat lr1 = ((cabecera->solct[1] * cabecera->taur[1]) / (4 * PI * d * d
-      * cos(titaSat))) * (exp(-cabecera->taug[1] / cos(titaSat))) * (exp(
-      -cabecera->taug[1] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
-
-  //  Ro1[i,j] := (d*d*PI* (LSat1[i,j] - Lr[1]))/(cos(TitaSol)* E0[1]);
+  std::vector<gfloat> lr;
 
   gfloat maxAj = -1000;
   gfloat minAj = 1000;
@@ -130,10 +126,18 @@ Imagen::corregirRHO()
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
+        lr[i] = ((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d * d
+            * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat))) * (exp(
+            -cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
+
         // todo: siempre seran 0 y 255 los max y min ND de cada banda?
         gfloat maxBanda = 255 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
+        maxBanda = (d * d * PI * (maxBanda - lr[i])) / (cos(titaSol)
+            * cabecera->solct[i]);
         gfloat minBanda = cabecera->gainBias[i].bias;
+        minBanda = (d * d * PI * (minBanda - lr[i])) / (cos(titaSol)
+            * cabecera->solct[i]);
         if (maxBanda > maxAj)
           maxAj = maxBanda;
 
@@ -164,7 +168,6 @@ Imagen::corregirRHO()
         }
     }
 }
-
 
 Glib::ustring
 Imagen::getDirectorio()
