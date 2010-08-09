@@ -94,7 +94,7 @@ Imagen::corregirL()
 }
 
 void
-Imagen::corregirLR()
+Imagen::corregirRHO()
 {
 
   gfloat d = 1 - 0.0167 * cos(
@@ -118,9 +118,9 @@ Imagen::corregirLR()
   gfloat faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
   gfloat faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
 
-//  Lr[1] := ((E0[1] * Tr[1]) / (4 * Pi * r* r * Cos(TitaSat))) *
-//          (Exp(-Tg[1]/Cos(TitaSat))) * (Exp(-Tg[1]/Cos(TitaSol))) *
-//          (FaseMenos + 0.052 * FaseMas);
+  gfloat lr1 = ((cabecera->solct[1] * cabecera->taur[1]) / (4 * PI * d * d
+      * cos(titaSat))) * (exp(-cabecera->taug[1] / cos(titaSat))) * (exp(
+      -cabecera->taug[1] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
 
   //  Ro1[i,j] := (d*d*PI* (LSat1[i,j] - Lr[1]))/(cos(TitaSol)* E0[1]);
 
@@ -165,11 +165,6 @@ Imagen::corregirLR()
     }
 }
 
-void
-Imagen::corregirRHO()
-{
-
-}
 
 Glib::ustring
 Imagen::getDirectorio()

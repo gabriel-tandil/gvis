@@ -67,6 +67,9 @@ public:
   obtieneNombreArchivoCapa(Glib::ustring);//TODO: llevar a una jerarquia de capas por satelite
   guint16 ancho;
   guint16 alto;
+  std::vector<gfloat> solct;
+  std::vector<gfloat> taur;
+  std::vector<gfloat> taug;
   std::vector<TGainBias> gainBias;
 protected:
   Glib::ustring tagSatelite;

@@ -30,7 +30,6 @@ PantallaCargarImagen::PantallaCargarImagen() :
   builder->get_widget("cancelar", cancelar);
   builder->get_widget("ND", nd);
   builder->get_widget("L", l);
-  builder->get_widget("LR", lr);
   builder->get_widget("RHO", rho);
   aceptar->signal_clicked().connect(sigc::mem_fun(*this,
       &PantallaCargarImagen::on_aceptar_clik));
@@ -74,8 +73,6 @@ PantallaCargarImagen::on_aceptar_clik()
   imagen->cargarBandas();
   if (l->get_active())
     imagen->corregirL();
-  if (lr->get_active())
-    imagen->corregirLR();
   if (rho->get_active())
     imagen->corregirRHO();
 

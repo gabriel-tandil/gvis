@@ -22,43 +22,44 @@
 
 Cabecera_L7::Cabecera_L7() :
   Cabecera()
-  {
-  /*
-Landsat 7
-solct
-1970
-1843
-1555
-1047
-227,1
+{
+  solct.push_back(1970);
+  solct.push_back(1843);
+  solct.push_back(1555);
+  solct.push_back(1047);
+  solct.push_back(227.1);
 
-Landsat 7
-Taur
-0,17
-0,09
-0,05
-0,02
-0
+  taur.push_back(0.17);
+  taur.push_back(0.09);
+  taur.push_back(0.05);
+  taur.push_back(0.02);
+  taur.push_back(0);
 
-   */
+  taug.push_back(0.01);
+  taug.push_back(0.03);
+  taug.push_back(0.02);
+  taug.push_back(0.02);
+  taug.push_back(0);
 
-    satelite=L7;
-    tagAncho="PIXELS PER LINE =";
-    tagAlto="LINES PER BAND =";
-    tagTamanioPixel="PIXEL SIZE = ";
-    tagNombreArchivo="FILENAME =";
-  }
+  satelite = L7;
+  tagAncho = "PIXELS PER LINE =";
+  tagAlto = "LINES PER BAND =";
+  tagTamanioPixel = "PIXEL SIZE = ";
+  tagNombreArchivo = "FILENAME =";
+}
 
- Glib::ustring Cabecera_L7::obtieneNombreArchivoCapa(Glib::ustring nombreCapa){
-  if (nombreCapa=="L")
-    return buscar(texto,tagNombreArchivo,0,".FST")+".FST";
-  if (nombreCapa=="H")
-    return buscar(texto,tagNombreArchivo,1,".FST")+".FST";
+Glib::ustring
+Cabecera_L7::obtieneNombreArchivoCapa(Glib::ustring nombreCapa)
+{
+  if (nombreCapa == "L")
+    return buscar(texto, tagNombreArchivo, 0, ".FST") + ".FST";
+  if (nombreCapa == "H")
+    return buscar(texto, tagNombreArchivo, 1, ".FST") + ".FST";
 
-  int ocurrencia =atoi(nombreCapa.c_str())-1;
-    return buscar(texto,tagNombreArchivo,ocurrencia,".FST")+".FST";
+  int ocurrencia = atoi(nombreCapa.c_str()) - 1;
+  return buscar(texto, tagNombreArchivo, ocurrencia, ".FST") + ".FST";
 }
 
 Cabecera_L7::~Cabecera_L7()
-  {
-  }
+{
+}
