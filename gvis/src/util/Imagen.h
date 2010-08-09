@@ -35,9 +35,6 @@ public:
   // imagen en radiancia
   void corregirL();
 
-  // imagen en radiancia Rayleigh
-  void corregirLR();
-
   // imagen en reflactancia Rayleigh
   void corregirRHO();
   Glib::ustring getDirectorio();
