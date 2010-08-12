@@ -20,6 +20,7 @@
 
 #include "Imagen.h"
 #include <math.h>
+#include <values.h>
 
 #define PI 3.14159265
 
@@ -52,8 +53,8 @@ void
 Imagen::corregirL()
 {
 
-  gfloat maxAj = -1000;
-  gfloat minAj = 1000;
+  gfloat maxAj = MINFLOAT;
+  gfloat minAj = MAXFLOAT;
 
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
@@ -82,13 +83,12 @@ Imagen::corregirL()
           gfloat gAjustado = (cabecera->gainBias[i].gain
               + cabecera->gainBias[i].bias) * gNorm + bNorm - bAjustado;
           for (int ii = 0; ii < cabecera->alto; ii++)
-            {
-              for (int iii = 0; iii < cabecera->ancho; iii++)
-                {
-                  vectorBanda[i]->matriz[ii][iii]
-                      = vectorBanda[i]->matriz[ii][iii] * gAjustado + bAjustado;
-                }
-            }
+
+            for (int iii = 0; iii < cabecera->ancho; iii++)
+
+              vectorBanda[i]->matriz[ii][iii] = vectorBanda[i]->matriz[ii][iii]
+                  * gAjustado + bAjustado;
+
         }
     }
 }
@@ -118,53 +118,67 @@ Imagen::corregirRHO()
   gfloat faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
   gfloat faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
 
-  std::vector<gfloat> lr;
+  std::vector<gfloat> maxB;
+  std::vector<gfloat> minB;
 
-  gfloat maxAj = -1000;
-  gfloat minAj = 1000;
+  gfloat maxAj = MINFLOAT;
+  gfloat minAj = MAXFLOAT;
 
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
-        lr[i] = ((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d * d
-            * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat))) * (exp(
-            -cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
+        gfloat lr=((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d
+            * d * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat)))
+            * (exp(-cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052
+            * faseMas);
 
         // todo: siempre seran 0 y 255 los max y min ND de cada banda?
         gfloat maxBanda = 255 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
-        maxBanda = (d * d * PI * (maxBanda - lr[i])) / (cos(titaSol)
+        maxBanda = (d * d * PI * (maxBanda - lr)) / (cos(titaSol)
             * cabecera->solct[i]);
         gfloat minBanda = cabecera->gainBias[i].bias;
-        minBanda = (d * d * PI * (minBanda - lr[i])) / (cos(titaSol)
+        minBanda = (d * d * PI * (minBanda - lr)) / (cos(titaSol)
             * cabecera->solct[i]);
+        maxB.push_back(maxBanda);
+        minB.push_back(minBanda);
         if (maxBanda > maxAj)
           maxAj = maxBanda;
 
         if (minBanda < minAj)
           minAj = minBanda;
       }
+    else
+      {
+    //    lr.push_back(0);
+        maxB.push_back(0);
+        minB.push_back(0);
+
+      }
+
   // calculo un gain y un bias para normalizar a 255
-  gfloat bNorm = 255 / (1 - (maxAj / minAj));
-  gfloat gNorm = (255 - bNorm) / maxAj;
+  gfloat bNorm = -((255 * minAj) / (maxAj - minAj));
+  gfloat gNorm = 255 / (maxAj - minAj);
 
   //  g_print("max: %f min: %f \n", (max,min,gc,bc);
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     {
       if (vectorBanda[i]->cargada)
         {
-          //calculo nuevos b y g para ajustar la radiancia y normalizar en un solo paso
-          gfloat bAjustado = cabecera->gainBias[i].bias * gNorm + bNorm;
-          gfloat gAjustado = (cabecera->gainBias[i].gain
-              + cabecera->gainBias[i].bias) * gNorm + bNorm - bAjustado;
+          gfloat bRai = minB[i];
+          gfloat gRai =(maxB[i]-minB[i])/255;
+
+          //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
+          gfloat bAjustado = bRai * gNorm + bNorm;
+          gfloat gAjustado = (gRai
+              + bRai) * gNorm + bNorm - bAjustado;
           for (int ii = 0; ii < cabecera->alto; ii++)
-            {
-              for (int iii = 0; iii < cabecera->ancho; iii++)
-                {
-                  vectorBanda[i]->matriz[ii][iii]
-                      = vectorBanda[i]->matriz[ii][iii] * gAjustado + bAjustado;
-                }
-            }
+
+            for (int iii = 0; iii < cabecera->ancho; iii++)
+
+              vectorBanda[i]->matriz[ii][iii] = vectorBanda[i]->matriz[ii][iii]
+                  * gAjustado + bAjustado;
+
         }
     }
 }
