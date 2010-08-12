@@ -50,7 +50,13 @@ public:
   virtual void
   on_configFalsoColor_clik();
   virtual bool
-  on_dibujo_rClik(GdkEventButton* evento);
+  on_dibujo_Apreta(GdkEventButton* evento);
+  virtual bool
+  on_dibujo_Suelta(GdkEventButton* evento);
+  virtual bool
+  on_dibujo_Mueve(GdkEventMotion* evento);
+  virtual void
+  actualizaFirmaEspectral(int ex, int ey);
   virtual void
   on_dibujo_cambia_tamanio(Gtk::Allocation rec);
   Gtk::Menu* menuEmergenteDibujo;
@@ -63,6 +69,7 @@ public:
   Gtk::HScrollbar* scrollHorizontal;
   Gtk::DrawingArea* dibujo;
   Gtk::Window* ventanaCabecera;
+  Gtk::Window* ventanaFirmaEspectral;
   PantallaCargarImagen* pantallaCargarImagen;
   PantallaFalsoColor* pantallaFalsoColor;
 

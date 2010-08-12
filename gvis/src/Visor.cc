@@ -32,6 +32,8 @@ Visor::Visor() :
   builder->get_widget("salir", salir);
   builder->get_widget("configFalsoColor", configFalsoColor);
   builder->get_widget("ventanaCabecera", ventanaCabecera);
+  builder->get_widget("ventanaFirmaEspectral", ventanaFirmaEspectral);
+
   //   builder->get_widget("menuEmergenteDibujo",menuEmergenteDibujo);
   pintorPrincipal = new Pintor(dibujo);
 
@@ -47,7 +49,11 @@ Visor::Visor() :
       &Visor::on_verCabecera_clik));
   salir->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_salir_clik));
   dibujo->signal_button_press_event().connect(sigc::mem_fun(*this,
-      &Visor::on_dibujo_rClik));
+      &Visor::on_dibujo_Apreta));
+  dibujo->signal_button_release_event().connect(sigc::mem_fun(*this,
+      &Visor::on_dibujo_Suelta));
+  dibujo->signal_motion_notify_event().connect(sigc::mem_fun(*this,
+      &Visor::on_dibujo_Mueve));
   dibujo->signal_expose_event().connect(sigc::mem_fun(*pintorPrincipal,
       &Pintor::on_dibujo_expose));
   dibujo->signal_size_allocate().connect(sigc::mem_fun(*this,
@@ -109,13 +115,60 @@ Visor::ajustarMaximoDesplazamiento()
 }
 
 bool
-Visor::on_dibujo_rClik(GdkEventButton* evento)
+Visor::on_dibujo_Apreta(GdkEventButton* evento)
 {
   if (evento->button == 1)
     {
-      menuEmergenteDibujo->show();
+      actualizaFirmaEspectral(evento->x, evento->y);
+      ventanaFirmaEspectral->show();
     }
 
+  return true;
+}
+
+bool
+Visor::on_dibujo_Suelta(GdkEventButton* evento)
+{
+  if (evento->button == 1)
+    ventanaFirmaEspectral->hide();
+  return true;
+}
+
+void
+Visor::actualizaFirmaEspectral(int ex, int ey)
+{
+  Gtk::Curve* firmaEspectral;
+  builder->get_widget("firmaEspectral", firmaEspectral);
+  //    firmaEspectral->set_curve_type(Gtk::CURVE_TYPE_LINEAR);
+  std::vector<float> temp;
+  int cuenta = 0;
+  if (imagen != NULL)
+    {
+      for (unsigned int i = 0; i < imagen->vectorBanda.size(); i++)
+        if (imagen->vectorBanda[i]->cargada)
+
+          {
+            cuenta++;
+            Banda* c = imagen->vectorBanda[i];
+            int y = scrollVertical->get_adjustment()->get_value() + ey;
+            int x = scrollHorizontal->get_adjustment()->get_value() + ex;
+            temp.push_back(c->matriz[y][x]);
+
+          }
+    }
+
+  firmaEspectral->set_range(0, cuenta - 1, 0, 255);
+  Glib::ArrayHandle<float> array1(temp);
+
+  firmaEspectral->set_vector(array1);
+
+}
+
+bool
+Visor::on_dibujo_Mueve(GdkEventMotion* evento)
+{
+  if (ventanaFirmaEspectral->is_visible())
+    actualizaFirmaEspectral(evento->x, evento->y);
   return true;
 }
 
@@ -170,7 +223,6 @@ Visor::on_verCabecera_clik()
   builder->get_widget("bandas", bandas);
   builder->get_widget("fecha", fecha);
   builder->get_widget("textoCabecera", textoCabecera);
-
   Glib::RefPtr<Gtk::TextBuffer> buffer = textoCabecera->get_buffer();
 
   buffer->set_text(imagen->cabecera->getTexto().substr(0,
