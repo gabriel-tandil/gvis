@@ -34,10 +34,12 @@ public:
   };
   TFalsoColor falsoColor;
   int desplazamientoX,desplazamientoY;
+  int nivelZoom;
   Pintor(Gtk::DrawingArea* dibu);
   bool on_dibujo_expose(GdkEventExpose* evento);
   virtual ~Pintor();
   void setImagen(Imagen* img);
+  void setNivelZoom(int nivel);
   void setDesplazamientoX(int desp);
   void setDesplazamientoY(int desp);
 private:

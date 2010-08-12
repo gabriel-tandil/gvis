@@ -28,6 +28,12 @@ Pintor::Pintor(Gtk::DrawingArea* dibu)
   falsoColor.azul = -1;
   desplazamientoX = 0;
   desplazamientoY = 0;
+  nivelZoom=1;
+}
+
+void
+Pintor::setNivelZoom(int nivel){
+  nivelZoom=nivel;
 }
 
 void
@@ -84,9 +90,9 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
 
           refGC1->set_rgb_fg_color(color);
           dibujo->get_window()->draw_point(refGC1, ii, i);
-          iid++;
+          iid+=nivelZoom;
         }
-      id++;
+      id+=nivelZoom;
     }
   return false;
 }

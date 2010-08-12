@@ -44,6 +44,10 @@ public:
   virtual void
   on_abrir_clik();
   virtual void
+  on_acercar_clik();
+  virtual void
+  on_alejar_clik();
+  virtual void
   on_verCabecera_clik();
   virtual void
   on_salir_clik();
@@ -56,14 +60,14 @@ public:
   virtual bool
   on_dibujo_Mueve(GdkEventMotion* evento);
   virtual void
-  actualizaFirmaEspectral(int ex, int ey);
-  virtual void
   on_dibujo_cambia_tamanio(Gtk::Allocation rec);
   Gtk::Menu* menuEmergenteDibujo;
   Gtk::ImageMenuItem* abrir;
   Gtk::ImageMenuItem* verCabecera;
   Gtk::ImageMenuItem* configFalsoColor;
   Gtk::ImageMenuItem* salir;
+  Gtk::ImageMenuItem* acercar;
+  Gtk::ImageMenuItem* alejar;
   Gtk::Window* seleccionCapas;
   Gtk::VScrollbar* scrollVertical;
   Gtk::HScrollbar* scrollHorizontal;
@@ -72,11 +76,14 @@ public:
   Gtk::Window* ventanaFirmaEspectral;
   PantallaCargarImagen* pantallaCargarImagen;
   PantallaFalsoColor* pantallaFalsoColor;
-
+  int nivelZoom;
   Imagen* imagen;
   Pintor* pintorPrincipal;
 private:
-  void ajustarMaximoDesplazamiento();
+  virtual void
+  actualizaFirmaEspectral(int ex, int ey);
+  void
+  ajustarMaximoDesplazamiento();
 };
 
 #endif /*VISOR_H_*/

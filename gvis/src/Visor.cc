@@ -23,11 +23,14 @@
 Visor::Visor() :
   Controlador("visor")
 {
+  nivelZoom = 1;
   imagen = NULL;
   builder->get_widget("scrollHorizontal", scrollHorizontal);
   builder->get_widget("scrollVertical", scrollVertical);
   builder->get_widget("dibujo", dibujo);
   builder->get_widget("abrir", abrir);
+  builder->get_widget("acercar", acercar);
+  builder->get_widget("alejar", alejar);
   builder->get_widget("verCabecera", verCabecera);
   builder->get_widget("salir", salir);
   builder->get_widget("configFalsoColor", configFalsoColor);
@@ -43,6 +46,12 @@ Visor::Visor() :
       &Visor::on_scrollVertical_change));
   ventana->signal_show().connect(sigc::mem_fun(*this, &Visor::on_ventana_show));
   abrir->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_abrir_clik));
+
+  acercar->signal_activate().connect(sigc::mem_fun(*this,
+      &Visor::on_acercar_clik));
+  alejar->signal_activate().connect(
+      sigc::mem_fun(*this, &Visor::on_alejar_clik));
+
   configFalsoColor->signal_activate().connect(sigc::mem_fun(*this,
       &Visor::on_configFalsoColor_clik));
   verCabecera->signal_activate().connect(sigc::mem_fun(*this,
@@ -175,14 +184,32 @@ Visor::on_dibujo_Mueve(GdkEventMotion* evento)
 void
 Visor::on_salir_clik()
 {
-
   ventana->hide();
+}
+
+void
+Visor::on_acercar_clik()
+{
+  nivelZoom--;
+  if (nivelZoom == 0)
+    nivelZoom = 1;
+  pintorPrincipal->setNivelZoom(nivelZoom);
+  dibujo->queue_draw();
+}
+
+void
+Visor::on_alejar_clik()
+{
+  nivelZoom++;
+  if (nivelZoom == 0)
+    nivelZoom = 1;
+  pintorPrincipal->setNivelZoom(nivelZoom);
+  dibujo->queue_draw();
 }
 
 void
 Visor::on_abrir_clik()
 {
-
   Gtk::FileChooserDialog dialog("Seleccione archivo de Cabecera...",
       Gtk::FILE_CHOOSER_ACTION_OPEN);
   dialog.set_transient_for(*ventana);
