@@ -210,4 +210,12 @@ Imagen::obtenerNumeroBanda(Glib::ustring cual)
 }
 Imagen::~Imagen()
 {
+  for (unsigned int i = 0; i < vectorBanda.size(); i++)
+    {
+      if (vectorBanda[i]->cargada)
+        {
+          delete vectorBanda[i];
+        }
+    }
+
 }
