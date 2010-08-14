@@ -279,6 +279,9 @@ Visor::on_abrir_clik()
   const int response = dialog.run();
   if (response == Gtk::RESPONSE_OK)
     {
+      if (imagen!=NULL){
+        delete imagen;
+      }
       imagen = new Imagen(dialog.get_filename());
     }
   pantallaCargarImagen->mostrar(imagen);
