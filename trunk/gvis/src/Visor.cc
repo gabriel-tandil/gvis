@@ -36,6 +36,7 @@ Visor::Visor() :
   builder->get_widget("configFalsoColor", configFalsoColor);
   builder->get_widget("ventanaCabecera", ventanaCabecera);
   builder->get_widget("ventanaFirmaEspectral", ventanaFirmaEspectral);
+  builder->get_widget("statusBar", statusBar);
 
   //   builder->get_widget("menuEmergenteDibujo",menuEmergenteDibujo);
   pintorPrincipal = new Pintor(dibujo);
@@ -45,6 +46,8 @@ Visor::Visor() :
   scrollVertical->signal_change_value().connect(sigc::mem_fun(*this,
       &Visor::on_scrollVertical_change));
   ventana->signal_show().connect(sigc::mem_fun(*this, &Visor::on_ventana_show));
+  ventana->signal_key_press_event().connect(sigc::mem_fun(*this,
+      &Visor::on_key_press));
   abrir->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_abrir_clik));
 
   acercar->signal_activate().connect(sigc::mem_fun(*this,
@@ -84,6 +87,16 @@ Visor::on_ventana_show()
 }
 
 bool
+Visor::on_key_press(GdkEventKey* evento)
+{
+  if (*evento->string == '+')
+    acercarZoom();
+  if (*evento->string == '-')
+    alejarZoom();
+  return true;
+}
+
+bool
 Visor::on_scrollHorizontal_change(Gtk::ScrollType st, double v)
 {
   pintorPrincipal->setDesplazamientoX(
@@ -116,10 +129,26 @@ Visor::ajustarMaximoDesplazamiento()
 {
   if (imagen)
     {
+      gfloat nivelZoomAjustado = nivelZoom == 0 ? 0.5 : nivelZoom;
+      //scrollHorizontal->set_value()
       scrollHorizontal->get_adjustment()->set_upper(imagen->cabecera->ancho
-          - dibujo->get_width());
+          - dibujo->get_width() * nivelZoomAjustado);
       scrollVertical->get_adjustment()->set_upper(imagen->cabecera->alto
-          - dibujo->get_height());
+          - dibujo->get_height() * nivelZoomAjustado);
+      if (scrollHorizontal->get_adjustment()->get_value()
+          > scrollHorizontal->get_adjustment()->get_upper()
+              + dibujo->get_width())
+        {
+          scrollHorizontal->get_adjustment()->set_value(
+              scrollHorizontal->get_adjustment()->get_upper());
+        }
+      if (scrollVertical->get_adjustment()->get_value()
+          > scrollVertical->get_adjustment()->get_upper()
+              + dibujo->get_height())
+        {
+          scrollVertical->get_adjustment()->set_value(
+              scrollVertical->get_adjustment()->get_upper());
+        }
     }
 }
 
@@ -128,6 +157,7 @@ Visor::on_dibujo_Apreta(GdkEventButton* evento)
 {
   if (evento->button == 1)
     {
+
       actualizaFirmaEspectral(evento->x, evento->y);
       ventanaFirmaEspectral->show();
     }
@@ -148,7 +178,7 @@ Visor::actualizaFirmaEspectral(int ex, int ey)
 {
   Gtk::Curve* firmaEspectral;
   builder->get_widget("firmaEspectral", firmaEspectral);
-  //    firmaEspectral->set_curve_type(Gtk::CURVE_TYPE_LINEAR);
+
   std::vector<float> temp;
   int cuenta = 0;
   if (imagen != NULL)
@@ -158,15 +188,16 @@ Visor::actualizaFirmaEspectral(int ex, int ey)
 
           {
             cuenta++;
+            gfloat nivelZoomAjustado = nivelZoom == 0 ? 0.5 : nivelZoom;
             Banda* c = imagen->vectorBanda[i];
-            int y = scrollVertical->get_adjustment()->get_value() + ey;
-            int x = scrollHorizontal->get_adjustment()->get_value() + ex;
+            int y = scrollVertical->get_adjustment()->get_value() + ey
+                * nivelZoomAjustado;
+            int x = scrollHorizontal->get_adjustment()->get_value() + ex
+                * nivelZoomAjustado;
             temp.push_back(c->matriz[y][x]);
 
           }
     }
-
-  firmaEspectral->set_range(0, cuenta - 1, 0, 255);
   Glib::ArrayHandle<float> array1(temp);
 
   firmaEspectral->set_vector(array1);
@@ -188,23 +219,54 @@ Visor::on_salir_clik()
 }
 
 void
+Visor::actualizarBarraEstado()
+{
+  gchar* msg;
+  if (nivelZoom == 1)
+    msg = g_strdup_printf("Nivel de Zoom: x 1");
+  else if (nivelZoom == 0)
+    msg = g_strdup_printf("Nivel de Zoom: x 2");
+  else
+    msg = g_strdup_printf("Nivel de Zoom: x 1/%d", nivelZoom);
+
+  statusBar->pop();
+  statusBar->push(msg);
+}
+
+void
 Visor::on_acercar_clik()
 {
-  nivelZoom--;
-  if (nivelZoom == 0)
-    nivelZoom = 1;
+  acercarZoom();
+}
+
+void
+Visor::acercarZoom()
+{
+  if (nivelZoom > 0)
+    nivelZoom--;
+  acercar->set_sensitive(nivelZoom!=0);
+  ajustarMaximoDesplazamiento();
   pintorPrincipal->setNivelZoom(nivelZoom);
+  actualizarBarraEstado();
   dibujo->queue_draw();
+}
+
+void
+Visor::alejarZoom()
+{
+  nivelZoom++;
+  acercar->set_sensitive(nivelZoom!=0);
+  ajustarMaximoDesplazamiento();
+  pintorPrincipal->setNivelZoom(nivelZoom);
+  actualizarBarraEstado();
+  dibujo->queue_draw();
+
 }
 
 void
 Visor::on_alejar_clik()
 {
-  nivelZoom++;
-  if (nivelZoom == 0)
-    nivelZoom = 1;
-  pintorPrincipal->setNivelZoom(nivelZoom);
-  dibujo->queue_draw();
+  alejarZoom();
 }
 
 void
