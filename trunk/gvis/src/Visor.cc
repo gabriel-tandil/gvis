@@ -157,11 +157,9 @@ Visor::on_dibujo_Apreta(GdkEventButton* evento)
 {
   if (evento->button == 1)
     {
-
       actualizaFirmaEspectral(evento->x, evento->y);
       ventanaFirmaEspectral->show();
     }
-
   return true;
 }
 
@@ -244,7 +242,7 @@ Visor::acercarZoom()
 {
   if (nivelZoom > 0)
     nivelZoom--;
-  acercar->set_sensitive(nivelZoom!=0);
+  acercar->set_sensitive(nivelZoom != 0);
   ajustarMaximoDesplazamiento();
   pintorPrincipal->setNivelZoom(nivelZoom);
   actualizarBarraEstado();
@@ -255,7 +253,7 @@ void
 Visor::alejarZoom()
 {
   nivelZoom++;
-  acercar->set_sensitive(nivelZoom!=0);
+  acercar->set_sensitive(nivelZoom != 0);
   ajustarMaximoDesplazamiento();
   pintorPrincipal->setNivelZoom(nivelZoom);
   actualizarBarraEstado();
