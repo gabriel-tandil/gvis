@@ -59,6 +59,8 @@ public:
   on_dibujo_Suelta(GdkEventButton* evento);
   virtual bool
   on_dibujo_Mueve(GdkEventMotion* evento);
+  virtual bool
+  on_key_press(GdkEventKey* evento);
   virtual void
   on_dibujo_cambia_tamanio(Gtk::Allocation rec);
   Gtk::Menu* menuEmergenteDibujo;
@@ -71,6 +73,7 @@ public:
   Gtk::Window* seleccionCapas;
   Gtk::VScrollbar* scrollVertical;
   Gtk::HScrollbar* scrollHorizontal;
+  Gtk::Statusbar* statusBar;
   Gtk::DrawingArea* dibujo;
   Gtk::Window* ventanaCabecera;
   Gtk::Window* ventanaFirmaEspectral;
@@ -84,6 +87,12 @@ private:
   actualizaFirmaEspectral(int ex, int ey);
   void
   ajustarMaximoDesplazamiento();
+  void
+  actualizarBarraEstado();
+  void
+  acercarZoom();
+  void
+  alejarZoom();
 };
 
 #endif /*VISOR_H_*/
