@@ -26,25 +26,33 @@
 #include "util/Imagen.h"
 
 class Pintor
-  {
+{
 public:
   struct TFalsoColor
   {
-    int rojo,verde,azul;
+    int rojo, verde, azul;
   };
   TFalsoColor falsoColor;
-  int desplazamientoX,desplazamientoY;
+  int desplazamientoX, desplazamientoY;
   int nivelZoom;
   Pintor(Gtk::DrawingArea* dibu);
-  bool on_dibujo_expose(GdkEventExpose* evento);
-  virtual ~Pintor();
-  void setImagen(Imagen* img);
-  void setNivelZoom(int nivel);
-  void setDesplazamientoX(int desp);
-  void setDesplazamientoY(int desp);
+  bool
+  on_dibujo_expose(GdkEventExpose* evento);
+  virtual
+  ~Pintor();
+  void
+  setImagen(Imagen* img);
+  void
+  reset();
+  void
+  setNivelZoom(int nivel);
+  void
+  setDesplazamientoX(int desp);
+  void
+  setDesplazamientoY(int desp);
 private:
   Gtk::DrawingArea* dibujo;
   Imagen* imagen;
-  };
+};
 
 #endif /* PINTOR_H_ */
