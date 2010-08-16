@@ -281,18 +281,20 @@ Visor::on_abrir_clik()
     {
       if (imagen!=NULL){
         delete imagen;
+        pintorPrincipal->reset();
       }
       imagen = new Imagen(dialog.get_filename());
+      pantallaCargarImagen->mostrar(imagen);
+      pintorPrincipal->setImagen(imagen);
+
+      ajustarMaximoDesplazamiento();
+
+      configFalsoColor->set_sensitive(true);
+      verCabecera->set_sensitive(true);
+
+    //  dibujo->queue_draw();
     }
-  pantallaCargarImagen->mostrar(imagen);
-  pintorPrincipal->setImagen(imagen);
 
-  ajustarMaximoDesplazamiento();
-
-  configFalsoColor->set_sensitive(true);
-  verCabecera->set_sensitive(true);
-
-  dibujo->queue_draw();
 
 }
 

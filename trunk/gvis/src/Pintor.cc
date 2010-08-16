@@ -45,6 +45,7 @@ Pintor::setImagen(Imagen* img)
 bool
 Pintor::on_dibujo_expose(GdkEventExpose* evento)
 {
+  if (imagen!=NULL){
   int capaRoja = falsoColor.rojo;
   int capaVerde = falsoColor.verde;
   int capaAzul = falsoColor.azul;
@@ -83,6 +84,7 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
         }
       id+=nivelZoom==0?i % 2 :nivelZoom;
     }
+  }
   return false;
 }
 
@@ -95,6 +97,15 @@ void
 Pintor::setDesplazamientoY(int desp)
 {
   desplazamientoY = desp;
+}
+
+void
+Pintor::reset()
+{
+  imagen = NULL;
+  falsoColor.rojo = -1;
+  falsoColor.verde = -1;
+  falsoColor.azul = -1;
 }
 
 Pintor::~Pintor()
