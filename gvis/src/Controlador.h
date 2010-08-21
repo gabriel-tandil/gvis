@@ -23,7 +23,7 @@
 
 #include <gtkmm.h>
 
-#define CARPETA_UI "src/"
+#define CARPETA_UI ""
 #define EXTENSION_UI ".ui"
 
 class Controlador
