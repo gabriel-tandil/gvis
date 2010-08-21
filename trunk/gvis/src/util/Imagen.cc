@@ -192,7 +192,7 @@ Imagen::getDirectorio()
   // TODO cambiar / para version windows
   inicio = nombreArchivo.rfind("/", inicio) + 1;
 
-  if (inicio == nombreArchivo.length())
+  if (inicio -1 == nombreArchivo.length())
     inicio = nombreArchivo.rfind("\\", inicio) + 1;
   Glib::ustring cadena = nombreArchivo.substr(0, inicio);
 
