@@ -157,6 +157,20 @@ Visor::on_dibujo_Apreta(GdkEventButton* evento)
 {
   if (evento->button == 1)
     {
+      if (imagen != NULL)
+        {
+          Gtk::HBox* etiquetasBandas;
+          builder->get_widget("etiquetasBandas", etiquetasBandas);
+          for (unsigned int i = 0; i < imagen->vectorBanda.size(); i++)
+            if (imagen->vectorBanda[i]->cargada)
+              {
+                Banda* c = imagen->vectorBanda[i];
+                Gtk::Label* etiqueta = new Gtk::Label(c->nombre, FALSE);
+                etiquetasBandas->pack_end(*etiqueta, true, true, 0);
+
+              }
+          etiquetasBandas->show_all();
+        }
       actualizaFirmaEspectral(evento->x, evento->y);
       ventanaFirmaEspectral->show();
     }
@@ -176,7 +190,6 @@ Visor::actualizaFirmaEspectral(int ex, int ey)
 {
   Gtk::Curve* firmaEspectral;
   builder->get_widget("firmaEspectral", firmaEspectral);
-
   std::vector<float> temp;
   int cuenta = 0;
   if (imagen != NULL)
@@ -193,11 +206,9 @@ Visor::actualizaFirmaEspectral(int ex, int ey)
             int x = scrollHorizontal->get_adjustment()->get_value() + ex
                 * nivelZoomAjustado;
             temp.push_back(c->matriz[y][x]);
-
           }
     }
   Glib::ArrayHandle<float> array1(temp);
-
   firmaEspectral->set_vector(array1);
 
 }
@@ -279,10 +290,11 @@ Visor::on_abrir_clik()
   const int response = dialog.run();
   if (response == Gtk::RESPONSE_OK)
     {
-      if (imagen!=NULL){
-        delete imagen;
-        pintorPrincipal->reset();
-      }
+      if (imagen != NULL)
+        {
+          delete imagen;
+          pintorPrincipal->reset();
+        }
       imagen = new Imagen(dialog.get_filename());
       pantallaCargarImagen->mostrar(imagen);
       pintorPrincipal->setImagen(imagen);
@@ -292,9 +304,8 @@ Visor::on_abrir_clik()
       configFalsoColor->set_sensitive(true);
       verCabecera->set_sensitive(true);
 
-    //  dibujo->queue_draw();
+      //  dibujo->queue_draw();
     }
-
 
 }
 
