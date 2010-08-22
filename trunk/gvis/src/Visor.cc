@@ -25,6 +25,7 @@ Visor::Visor() :
 {
   nivelZoom = 1;
   imagen = NULL;
+  etiquetasBandas = NULL;
   builder->get_widget("scrollHorizontal", scrollHorizontal);
   builder->get_widget("scrollVertical", scrollVertical);
   builder->get_widget("dibujo", dibujo);
@@ -159,20 +160,33 @@ Visor::on_dibujo_Apreta(GdkEventButton* evento)
     {
       if (imagen != NULL)
         {
-          Gtk::HBox* etiquetasBandas;
-          builder->get_widget("etiquetasBandas", etiquetasBandas);
+          Gtk::Table* tablaFirmaEspectral;
+
+          builder->get_widget("tablaFirmaEspectral", tablaFirmaEspectral);
+          if (etiquetasBandas != NULL)
+            {
+              tablaFirmaEspectral->remove(*etiquetasBandas);
+              delete etiquetasBandas;
+            }
+          etiquetasBandas = new Gtk::HBox(true, 0);
+          tablaFirmaEspectral->attach(*etiquetasBandas, 1, 2, 1, 2, Gtk::EXPAND
+              | Gtk::FILL, Gtk::EXPAND | Gtk::FILL, 0, 0);
+
           for (unsigned int i = 0; i < imagen->vectorBanda.size(); i++)
             if (imagen->vectorBanda[i]->cargada)
               {
                 Banda* c = imagen->vectorBanda[i];
-                Gtk::Label* etiqueta = new Gtk::Label(c->nombre, FALSE);
-                etiquetasBandas->pack_end(*etiqueta, true, true, 0);
+                Gtk::Label* etiqueta = new Gtk::Label(c->nombre, false);
+                etiquetasBandas->pack_start(*etiqueta, true, true, 0);
 
               }
-          etiquetasBandas->show_all();
+          tablaFirmaEspectral->show_all_children(true);
         }
       actualizaFirmaEspectral(evento->x, evento->y);
       ventanaFirmaEspectral->show();
+      int x,y;
+      ventanaFirmaEspectral->get_position(x,y);
+      ventanaFirmaEspectral->move(x+200,y);
     }
   return true;
 }
