@@ -75,6 +75,7 @@ public:
   Gtk::HScrollbar* scrollHorizontal;
   Gtk::Statusbar* statusBar;
   Gtk::DrawingArea* dibujo;
+  Gtk::HBox* etiquetasBandas;
   Gtk::Window* ventanaCabecera;
   Gtk::Window* ventanaFirmaEspectral;
   PantallaCargarImagen* pantallaCargarImagen;
