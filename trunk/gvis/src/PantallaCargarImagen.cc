@@ -32,6 +32,8 @@ PantallaCargarImagen::PantallaCargarImagen() :
   builder->get_widget("L", l);
   builder->get_widget("RHO", rho);
   builder->get_widget("RHOR", rhor);
+  builder->get_widget("ajustarPorBanda", ajustarPorBanda);
+  builder->get_widget("ajustarPorImagen", ajustarPorImagen);
   aceptar->signal_clicked().connect(sigc::mem_fun(*this,
       &PantallaCargarImagen::on_aceptar_clik));
   cancelar->signal_clicked().connect(sigc::mem_fun(*this,
@@ -73,11 +75,11 @@ PantallaCargarImagen::on_aceptar_clik()
 
   imagen->cargarBandas();
   if (l->get_active())
-    imagen->corregirL();
+    imagen->corregirL(ajustarPorBanda->get_active());
   if (rho->get_active())
-    imagen->corregirRHO();
+    imagen->corregirRHO(ajustarPorBanda->get_active());
   if (rhor->get_active())
-    imagen->corregirRHOR();
+    imagen->corregirRHOR(ajustarPorBanda->get_active());
 
   ventana->hide();
 }
@@ -98,8 +100,6 @@ PantallaCargarImagen::armarListaBandas(Imagen* imagen)
     {
       liststore_add_item(imagen->vectorBanda[i]);
     }
-  //    std::for_each(imagen->vectorBanda.begin(), imagen->vectorBanda.end(),
-  //        sigc::mem_fun(*this, &PantallaCapas::liststore_add_item));
   listaBandas->set_model(m_refListStore);
 
 }
