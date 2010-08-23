@@ -42,6 +42,11 @@ Pintor::setImagen(Imagen* img)
   imagen = img;
 }
 
+Gtk::DrawingArea*
+Pintor::getDibujo(){
+  return dibujo;
+}
+
 bool
 Pintor::on_dibujo_expose(GdkEventExpose* evento)
 {

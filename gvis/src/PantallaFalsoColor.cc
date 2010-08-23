@@ -73,7 +73,7 @@ PantallaFalsoColor::on_aceptar_falsoColor_clik()
       falsoColorVerde));
   pintor->falsoColor.azul = imagen->obtenerNumeroBanda(get_active_text(
       falsoColorAzul));
-
+  pintor->getDibujo()->queue_draw();
   ventana->hide();
 }
 

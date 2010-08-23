@@ -31,6 +31,7 @@ PantallaCargarImagen::PantallaCargarImagen() :
   builder->get_widget("ND", nd);
   builder->get_widget("L", l);
   builder->get_widget("RHO", rho);
+  builder->get_widget("RHOR", rhor);
   aceptar->signal_clicked().connect(sigc::mem_fun(*this,
       &PantallaCargarImagen::on_aceptar_clik));
   cancelar->signal_clicked().connect(sigc::mem_fun(*this,
@@ -75,6 +76,8 @@ PantallaCargarImagen::on_aceptar_clik()
     imagen->corregirL();
   if (rho->get_active())
     imagen->corregirRHO();
+  if (rhor->get_active())
+    imagen->corregirRHOR();
 
   ventana->hide();
 }

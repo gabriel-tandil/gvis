@@ -80,12 +80,13 @@
             </child>
             <child>
               <object class="GtkRadioButton" id="RHO">
-                <property name="label" translatable="yes">&#x2374;</property>
+                <property name="label" translatable="yes">rho</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">Reflectividad (con correcci&#xF3;n de efecto Rayleigh)</property>
-                <property name="xalign">0.50999999046325684</property>
+                <property name="tooltip_text" translatable="yes">Reflectividad</property>
+                <property name="relief">half</property>
+                <property name="yalign">0.52999997138977051</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">ND</property>
               </object>
@@ -93,6 +94,22 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioButton" id="RHOR">
+                <property name="label" translatable="yes">rho (-rayleigh)</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">Reflectividad con correccion de efecto rayleigh</property>
+                <property name="draw_indicator">True</property>
+                <property name="group">ND</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>
