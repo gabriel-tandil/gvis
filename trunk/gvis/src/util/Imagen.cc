@@ -59,16 +59,17 @@ Imagen::corregirL()
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
-        // todo: siempre seran 0 y 255 los max y min ND de cada banda?
         gfloat maxBanda = 255 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
         gfloat minBanda = cabecera->gainBias[i].bias;
+        g_print("Banda %i maximo: %f minimo: %f\n", i + 1, maxBanda, minBanda);
         if (maxBanda > maxAj)
           maxAj = maxBanda;
 
         if (minBanda < minAj)
           minAj = minBanda;
       }
+  g_print("Todas las Bandas maximo: %f minimo: %f\n", maxAj, minAj);
   // calculo un gain y un bias para normalizar a 255
   gfloat bNorm = 255 / (1 - (maxAj / minAj));
   gfloat gNorm = (255 - bNorm) / maxAj;
@@ -97,26 +98,30 @@ void
 Imagen::corregirRHO()
 {
 
-  gfloat d = 1 - 0.0167 * cos(
-      (2 * PI * (cabecera->getFecha().get_julian() - 3)) / 365);
+  gdouble d = 1 - 0.0167 * cos(
+      (2 * PI * (cabecera->getFecha().get_day_of_year()+1 - 3)) / 365);
 
-  gfloat titaSat = 0;
-  gfloat titaSol = 90 - cabecera->getTitaSol();
-  gfloat phiSat = 0;
-  gfloat phiSol = cabecera->getPhiSol();
-
+  gdouble titaSat = 0;
+  gdouble titaSol = 90 - cabecera->getTitaSol();
+  gdouble phiSat = 0;
+  gdouble phiSol = cabecera->getPhiSol();
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
   titaSat = titaSat * PI / 180;
   phiSat = phiSat * PI / 180;
-  titaSol = titaSol * PI / 180;
-  phiSol = phiSol * PI / 180;
+  titaSol = titaSol * PI / 180;//zenit
+  phiSol = phiSol * PI / 180; //azimut
 
-  gfloat cosenoMas = cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(titaSol)
+  gdouble cosenoMas = cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(titaSol)
       * cos(phiSat - phiSol);
-  gfloat cosenoMenos = -cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(
+  gdouble cosenoMenos = -cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(
       titaSol) * cos(phiSat - phiSol);
 
-  gfloat faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
-  gfloat faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
+  gdouble faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
+  gdouble faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
+  g_print("Distancia tierra sol: %f \n", d);
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
+  g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas,cosenoMenos);
+  g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas,faseMenos);
 
   std::vector<gfloat> maxB;
   std::vector<gfloat> minB;
@@ -127,12 +132,11 @@ Imagen::corregirRHO()
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
-        gfloat lr=((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d
-            * d * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat)))
-            * (exp(-cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052
-            * faseMas);
+        gfloat lr = ((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d * d
+            * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat))) * (exp(
+            -cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
+        g_print("LR Banda %i: %f\n", i + 1, lr);
 
-        // todo: siempre seran 0 y 255 los max y min ND de cada banda?
         gfloat maxBanda = 255 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
         maxBanda = (d * d * PI * (maxBanda - lr)) / (cos(titaSol)
@@ -140,6 +144,7 @@ Imagen::corregirRHO()
         gfloat minBanda = cabecera->gainBias[i].bias;
         minBanda = (d * d * PI * (minBanda - lr)) / (cos(titaSol)
             * cabecera->solct[i]);
+        g_print("Banda %i maximo: %f minimo: %f\n", i + 1, maxBanda, minBanda);
         maxB.push_back(maxBanda);
         minB.push_back(minBanda);
         if (maxBanda > maxAj)
@@ -150,12 +155,11 @@ Imagen::corregirRHO()
       }
     else
       {
-    //    lr.push_back(0);
         maxB.push_back(0);
         minB.push_back(0);
 
       }
-
+  g_print("Todas las Bandas maximo: %f minimo: %f\n", maxAj, minAj);
   // calculo un gain y un bias para normalizar a 255
   gfloat bNorm = -((255 * minAj) / (maxAj - minAj));
   gfloat gNorm = 255 / (maxAj - minAj);
@@ -166,12 +170,11 @@ Imagen::corregirRHO()
       if (vectorBanda[i]->cargada)
         {
           gfloat bRai = minB[i];
-          gfloat gRai =(maxB[i]-minB[i])/255;
+          gfloat gRai = (maxB[i] - minB[i]) / 255;
 
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
           gfloat bAjustado = bRai * gNorm + bNorm;
-          gfloat gAjustado = (gRai
-              + bRai) * gNorm + bNorm - bAjustado;
+          gfloat gAjustado = (gRai + bRai) * gNorm + bNorm - bAjustado;
           for (int ii = 0; ii < cabecera->alto; ii++)
 
             for (int iii = 0; iii < cabecera->ancho; iii++)
@@ -186,18 +189,17 @@ Imagen::corregirRHO()
 Glib::ustring
 Imagen::getDirectorio()
 {
-
   Glib::ustring::size_type inicio = nombreArchivo.length();
 
-  // TODO cambiar / para version windows
   inicio = nombreArchivo.rfind("/", inicio) + 1;
 
-  if (inicio -1 == nombreArchivo.length())
+  if (inicio - 1 == nombreArchivo.length())
     inicio = nombreArchivo.rfind("\\", inicio) + 1;
   Glib::ustring cadena = nombreArchivo.substr(0, inicio);
 
   return cadena;
 }
+
 int
 Imagen::obtenerNumeroBanda(Glib::ustring cual)
 {
