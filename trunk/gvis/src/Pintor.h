@@ -42,6 +42,8 @@ public:
   ~Pintor();
   void
   setImagen(Imagen* img);
+  Gtk::DrawingArea*
+  getDibujo();
   void
   reset();
   void

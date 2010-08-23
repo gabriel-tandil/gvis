@@ -132,6 +132,93 @@ Imagen::corregirRHO()
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
+        gfloat maxBanda = 255 * cabecera->gainBias[i].gain
+            + cabecera->gainBias[i].bias;
+        maxBanda = (d * d * PI * (maxBanda )) / (cos(titaSol)
+            * cabecera->solct[i]);
+        gfloat minBanda = cabecera->gainBias[i].bias;
+        minBanda = (d * d * PI * (minBanda )) / (cos(titaSol)
+            * cabecera->solct[i]);
+        g_print("Banda %i maximo: %f minimo: %f\n", i + 1, maxBanda, minBanda);
+        maxB.push_back(maxBanda);
+        minB.push_back(minBanda);
+        if (maxBanda > maxAj)
+          maxAj = maxBanda;
+
+        if (minBanda < minAj)
+          minAj = minBanda;
+      }
+    else
+      {
+        maxB.push_back(0);
+        minB.push_back(0);
+
+      }
+  g_print("Todas las Bandas maximo: %f minimo: %f\n", maxAj, minAj);
+  // calculo un gain y un bias para normalizar a 255
+  gfloat bNorm = -((255 * minAj) / (maxAj - minAj));
+  gfloat gNorm = 255 / (maxAj - minAj);
+
+  //  g_print("max: %f min: %f \n", (max,min,gc,bc);
+  for (unsigned int i = 0; i < vectorBanda.size(); i++)
+    {
+      if (vectorBanda[i]->cargada)
+        {
+          gfloat bRai = minB[i];
+          gfloat gRai = (maxB[i] - minB[i]) / 255;
+
+          //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
+          gfloat bAjustado = bRai * gNorm + bNorm;
+          gfloat gAjustado = (gRai + bRai) * gNorm + bNorm - bAjustado;
+          for (int ii = 0; ii < cabecera->alto; ii++)
+
+            for (int iii = 0; iii < cabecera->ancho; iii++)
+
+              vectorBanda[i]->matriz[ii][iii] = vectorBanda[i]->matriz[ii][iii]
+                  * gAjustado + bAjustado;
+
+        }
+    }
+}
+
+void
+Imagen::corregirRHOR()
+{
+
+  gdouble d = 1 - 0.0167 * cos(
+      (2 * PI * (cabecera->getFecha().get_day_of_year()+1 - 3)) / 365);
+
+  gdouble titaSat = 0;
+  gdouble titaSol = 90 - cabecera->getTitaSol();
+  gdouble phiSat = 0;
+  gdouble phiSol = cabecera->getPhiSol();
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
+  titaSat = titaSat * PI / 180;
+  phiSat = phiSat * PI / 180;
+  titaSol = titaSol * PI / 180;//zenit
+  phiSol = phiSol * PI / 180; //azimut
+
+  gdouble cosenoMas = cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(titaSol)
+      * cos(phiSat - phiSol);
+  gdouble cosenoMenos = -cos(titaSat) * cos(titaSol) - sin(titaSat) * sin(
+      titaSol) * cos(phiSat - phiSol);
+
+  gdouble faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
+  gdouble faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
+  g_print("Distancia tierra sol: %f \n", d);
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
+  g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas,cosenoMenos);
+  g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas,faseMenos);
+
+  std::vector<gfloat> maxB;
+  std::vector<gfloat> minB;
+
+  gfloat maxAj = MINFLOAT;
+  gfloat minAj = MAXFLOAT;
+
+  for (unsigned int i = 0; i < vectorBanda.size(); i++)
+    if (vectorBanda[i]->cargada)
+      {
         gfloat lr = ((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d * d
             * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat))) * (exp(
             -cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
