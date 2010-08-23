@@ -33,11 +33,11 @@ public:
   void cargarBandas();
 
   // imagen en radiancia
-  void corregirL();
+  void corregirL(bool ajustarRangoDinamicoPorBanda);
   // imagen en reflactancia
-  void corregirRHO();
+  void corregirRHO(bool ajustarRangoDinamicoPorBanda);
   // imagen en reflactancia Rayleigh
-  void corregirRHOR();
+  void corregirRHOR(bool ajustarRangoDinamicoPorBanda);
   Glib::ustring getDirectorio();
   int obtenerNumeroBanda(Glib::ustring cual);
   TVectorCapa vectorBanda;

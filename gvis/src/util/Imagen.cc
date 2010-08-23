@@ -50,12 +50,13 @@ Imagen::cargarBandas()
 }
 
 void
-Imagen::corregirL()
+Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
 {
 
   gfloat maxAj = MINFLOAT;
   gfloat minAj = MAXFLOAT;
-
+  std::vector<gfloat> maxB;
+  std::vector<gfloat> minB;
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
@@ -63,12 +64,20 @@ Imagen::corregirL()
             + cabecera->gainBias[i].bias;
         gfloat minBanda = cabecera->gainBias[i].bias;
         g_print("Banda %i maximo: %f minimo: %f\n", i + 1, maxBanda, minBanda);
+        maxB.push_back(maxBanda);
+        minB.push_back(minBanda);
         if (maxBanda > maxAj)
           maxAj = maxBanda;
 
         if (minBanda < minAj)
           minAj = minBanda;
       }
+    else
+      {
+        maxB.push_back(0);
+        minB.push_back(0);
+      }
+
   g_print("Todas las Bandas maximo: %f minimo: %f\n", maxAj, minAj);
   // calculo un gain y un bias para normalizar a 255
   gfloat bNorm = 255 / (1 - (maxAj / minAj));
@@ -79,6 +88,11 @@ Imagen::corregirL()
     {
       if (vectorBanda[i]->cargada)
         {
+          if (ajustarRangoDinamicoPorBanda)
+            {
+              bNorm = 255 / (1 - (maxB[i] / minB[i]));
+              gNorm = (255 - bNorm) / maxB[i];
+            }
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
           gfloat bAjustado = cabecera->gainBias[i].bias * gNorm + bNorm;
           gfloat gAjustado = (cabecera->gainBias[i].gain
@@ -95,17 +109,18 @@ Imagen::corregirL()
 }
 
 void
-Imagen::corregirRHO()
+Imagen::corregirRHO(bool ajustarRangoDinamicoPorBanda)
 {
 
-  gdouble d = 1 - 0.0167 * cos(
-      (2 * PI * (cabecera->getFecha().get_day_of_year()+1 - 3)) / 365);
+  gdouble d = 1 - 0.0167 * cos((2 * PI
+      * (cabecera->getFecha().get_day_of_year() + 1 - 3)) / 365);
 
   gdouble titaSat = 0;
   gdouble titaSol = 90 - cabecera->getTitaSol();
   gdouble phiSat = 0;
   gdouble phiSol = cabecera->getPhiSol();
-  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat, phiSat,
+      titaSol, phiSol);
   titaSat = titaSat * PI / 180;
   phiSat = phiSat * PI / 180;
   titaSol = titaSol * PI / 180;//zenit
@@ -119,9 +134,10 @@ Imagen::corregirRHO()
   gdouble faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
   gdouble faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
   g_print("Distancia tierra sol: %f \n", d);
-  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
-  g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas,cosenoMenos);
-  g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas,faseMenos);
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat, phiSat,
+      titaSol, phiSol);
+  g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas, cosenoMenos);
+  g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas, faseMenos);
 
   std::vector<gfloat> maxB;
   std::vector<gfloat> minB;
@@ -134,10 +150,10 @@ Imagen::corregirRHO()
       {
         gfloat maxBanda = 255 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
-        maxBanda = (d * d * PI * (maxBanda )) / (cos(titaSol)
+        maxBanda = (d * d * PI * (maxBanda)) / (cos(titaSol)
             * cabecera->solct[i]);
         gfloat minBanda = cabecera->gainBias[i].bias;
-        minBanda = (d * d * PI * (minBanda )) / (cos(titaSol)
+        minBanda = (d * d * PI * (minBanda)) / (cos(titaSol)
             * cabecera->solct[i]);
         g_print("Banda %i maximo: %f minimo: %f\n", i + 1, maxBanda, minBanda);
         maxB.push_back(maxBanda);
@@ -164,12 +180,19 @@ Imagen::corregirRHO()
     {
       if (vectorBanda[i]->cargada)
         {
-          gfloat bRai = minB[i];
-          gfloat gRai = (maxB[i] - minB[i]) / 255;
+          if (ajustarRangoDinamicoPorBanda)
+            {
+              // calculo un gain y un bias para normalizar a 255
+              bNorm = -((255 * minB[i]) / (maxB[i] - minB[i]));
+              gNorm = 255 / (maxB[i] - minB[i]);
+            }
+
+          gfloat bRef = minB[i];
+          gfloat gRef = (maxB[i] - minB[i]) / 255;
 
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
-          gfloat bAjustado = bRai * gNorm + bNorm;
-          gfloat gAjustado = (gRai + bRai) * gNorm + bNorm - bAjustado;
+          gfloat bAjustado = bRef * gNorm + bNorm;
+          gfloat gAjustado = (gRef + bRef) * gNorm + bNorm - bAjustado;
           for (int ii = 0; ii < cabecera->alto; ii++)
 
             for (int iii = 0; iii < cabecera->ancho; iii++)
@@ -182,17 +205,18 @@ Imagen::corregirRHO()
 }
 
 void
-Imagen::corregirRHOR()
+Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
 {
 
-  gdouble d = 1 - 0.0167 * cos(
-      (2 * PI * (cabecera->getFecha().get_day_of_year()+1 - 3)) / 365);
+  gdouble d = 1 - 0.0167 * cos((2 * PI
+      * (cabecera->getFecha().get_day_of_year() + 1 - 3)) / 365);
 
   gdouble titaSat = 0;
   gdouble titaSol = 90 - cabecera->getTitaSol();
   gdouble phiSat = 0;
   gdouble phiSol = cabecera->getPhiSol();
-  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat, phiSat,
+      titaSol, phiSol);
   titaSat = titaSat * PI / 180;
   phiSat = phiSat * PI / 180;
   titaSol = titaSol * PI / 180;//zenit
@@ -206,9 +230,10 @@ Imagen::corregirRHOR()
   gdouble faseMas = 0.75 * (1 + cosenoMas * cosenoMas);
   gdouble faseMenos = 0.75 * (1 + cosenoMenos * cosenoMenos);
   g_print("Distancia tierra sol: %f \n", d);
-  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat,phiSat,titaSol,phiSol);
-  g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas,cosenoMenos);
-  g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas,faseMenos);
+  g_print("titaSat: %f phiSat: %f titaSol: %f phiSol: %f \n", titaSat, phiSat,
+      titaSol, phiSol);
+  g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas, cosenoMenos);
+  g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas, faseMenos);
 
   std::vector<gfloat> maxB;
   std::vector<gfloat> minB;
@@ -256,6 +281,13 @@ Imagen::corregirRHOR()
     {
       if (vectorBanda[i]->cargada)
         {
+          if (ajustarRangoDinamicoPorBanda)
+            {
+              // calculo un gain y un bias para normalizar a 255
+              bNorm = -((255 * minB[i]) / (maxB[i] - minB[i]));
+              gNorm = 255 / (maxB[i] - minB[i]);
+            }
+
           gfloat bRai = minB[i];
           gfloat gRai = (maxB[i] - minB[i]) / 255;
 

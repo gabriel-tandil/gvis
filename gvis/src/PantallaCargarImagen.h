@@ -46,6 +46,8 @@ public:
   Gtk::RadioButton* lr;
   Gtk::RadioButton* rho;
   Gtk::RadioButton* rhor;
+  Gtk::RadioButton* ajustarPorBanda;
+  Gtk::RadioButton* ajustarPorImagen;
   Imagen* imagen;
   Glib::RefPtr<Gtk::ListStore> m_refListStore;
   void add_columns();
