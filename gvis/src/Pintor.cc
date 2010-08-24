@@ -28,12 +28,19 @@ Pintor::Pintor(Gtk::DrawingArea* dibu)
   falsoColor.azul = -1;
   desplazamientoX = 0;
   desplazamientoY = 0;
-  nivelZoom=1;
+  nivelZoom = 1;
+  minRojo = 0;
+  minVerde = 0;
+  minAzul = 0;
+  maxRojo = 255;
+  maxVerde = 255;
+  maxAzul = 255;
 }
 
 void
-Pintor::setNivelZoom(int nivel){
-  nivelZoom=nivel;
+Pintor::setNivelZoom(int nivel)
+{
+  nivelZoom = nivel;
 }
 
 void
@@ -43,53 +50,52 @@ Pintor::setImagen(Imagen* img)
 }
 
 Gtk::DrawingArea*
-Pintor::getDibujo(){
+Pintor::getDibujo()
+{
   return dibujo;
 }
 
 bool
 Pintor::on_dibujo_expose(GdkEventExpose* evento)
 {
-  if (imagen!=NULL){
-  int capaRoja = falsoColor.rojo;
-  int capaVerde = falsoColor.verde;
-  int capaAzul = falsoColor.azul;
-  Glib::RefPtr<Gdk::GC> refGC1 = Gdk::GC::create(dibujo->get_window());
-  Gdk::Color color;
 
-  refGC1->set_rgb_fg_color(color);
-  g_print("Redibujando %i,%i->%i,%i\n", evento->area.x, evento->area.y,
-      evento->area.x + evento->area.width, evento->area.y + evento->area.height);
-  int id = desplazamientoY + evento->area.y;
-  for (int i = evento->area.y; i < evento->area.height; i++)
+  if (imagen != NULL)
     {
-      int iid = desplazamientoX + evento->area.x;
-      for (int ii = evento->area.x; ii < evento->area.width; ii++)
+      if (falsoColor.rojo >= 0 && falsoColor.verde >= 0 && falsoColor.azul >= 0)
         {
+          if (minAzul == 0 && maxAzul == 255 && minRojo == 0 && maxRojo == 255
+              && minVerde == 0 && maxVerde == 255)
+            {
 
-          if (capaRoja >= 0)
-            {
-              Banda* c = imagen->vectorBanda[capaRoja];
-              color.set_red(c->matriz[id][iid] * 255);
+              pintarTresBandas(evento->area.x, evento->area.y,
+                  evento->area.height, evento->area.width);
             }
-          if (capaVerde >= 0)
+          else
             {
-              Banda* c = imagen->vectorBanda[capaVerde];
-              color.set_green(c->matriz[id][iid] * 255);
+              pintarTresBandasRangoAcotado(evento->area.x, evento->area.y,
+                  evento->area.height, evento->area.width);
             }
-          if (capaAzul >= 0)
-            {
-              Banda* c = imagen->vectorBanda[capaAzul];
-              color.set_blue(c->matriz[id][iid] * 255);
-            }
-
-          refGC1->set_rgb_fg_color(color);
-          dibujo->get_window()->draw_point(refGC1, ii, i);
-          iid+=nivelZoom==0?ii % 2 :nivelZoom;
         }
-      id+=nivelZoom==0?i % 2 :nivelZoom;
+      else
+        {
+          if (minAzul == 0 && maxAzul == 255 && minRojo == 0 && maxRojo == 255
+              && minVerde == 0 && maxVerde == 255)
+            {
+              pintarMenosBandas(evento->area.x, evento->area.y,
+                  evento->area.height, evento->area.width);
+            }
+          else
+            {
+              pintarMenosBandasRangoAcotado(evento->area.x, evento->area.y,
+                  evento->area.height, evento->area.width);
+            }
+        }
+
+      g_print("Redibujando %i,%i->%i,%i\n", evento->area.x, evento->area.y,
+          evento->area.x + evento->area.width, evento->area.y
+              + evento->area.height);
+
     }
-  }
   return false;
 }
 
@@ -111,6 +117,164 @@ Pintor::reset()
   falsoColor.rojo = -1;
   falsoColor.verde = -1;
   falsoColor.azul = -1;
+}
+
+void
+Pintor::pintarTresBandas(int x, int y, int height, int width)
+{
+  int capaRoja = falsoColor.rojo;
+  int capaVerde = falsoColor.verde;
+  int capaAzul = falsoColor.azul;
+  Glib::RefPtr<Gdk::GC> refGC1 = Gdk::GC::create(dibujo->get_window());
+  Gdk::Color color;
+  int id = desplazamientoY + y;
+  for (int i = y; i < height; i++)
+    {
+      int iid = desplazamientoX + x;
+      for (int ii = x; ii < width; ii++)
+        {
+
+          Banda* c = imagen->vectorBanda[capaRoja];
+          color.set_red(c->matriz[id][iid] * 255);
+          c = imagen->vectorBanda[capaVerde];
+          color.set_green(c->matriz[id][iid] * 255);
+          c = imagen->vectorBanda[capaAzul];
+          color.set_blue(c->matriz[id][iid] * 255);
+
+          refGC1->set_rgb_fg_color(color);
+          dibujo->get_window()->draw_point(refGC1, ii, i);
+          iid += nivelZoom == 0 ? ii % 2 : nivelZoom;
+        }
+      id += nivelZoom == 0 ? i % 2 : nivelZoom;
+    }
+}
+
+void
+Pintor::pintarTresBandasRangoAcotado(int x, int y, int height, int width)
+{
+  int minRojo = this->minRojo;
+  int minVerde = this->minVerde;
+  int minAzul = this->minAzul;
+  int maxRojo = this->maxRojo;
+  int maxVerde = this->maxVerde;
+  int maxAzul = this->maxAzul;
+  int capaRoja = falsoColor.rojo;
+  int capaVerde = falsoColor.verde;
+  int capaAzul = falsoColor.azul;
+  Glib::RefPtr<Gdk::GC> refGC1 = Gdk::GC::create(dibujo->get_window());
+  Gdk::Color color;
+  int id = desplazamientoY + y;
+  for (int i = y; i < height; i++)
+    {
+      int iid = desplazamientoX + x;
+      for (int ii = x; ii < width; ii++)
+        {
+
+          Banda* c = imagen->vectorBanda[capaRoja];
+          color.set_red((c->matriz[id][iid] < maxRojo && c->matriz[id][iid]
+              > minRojo) ? c->matriz[id][iid] * 255 : 0);
+          c = imagen->vectorBanda[capaVerde];
+          color.set_green((c->matriz[id][iid] < maxVerde && c->matriz[id][iid]
+              > minVerde) ? c->matriz[id][iid] * 255 : 0);
+          c = imagen->vectorBanda[capaAzul];
+          color.set_blue((c->matriz[id][iid] < maxAzul && c->matriz[id][iid]
+              > minAzul) ? c->matriz[id][iid] * 255 : 0);
+
+          refGC1->set_rgb_fg_color(color);
+          dibujo->get_window()->draw_point(refGC1, ii, i);
+          iid += nivelZoom == 0 ? ii % 2 : nivelZoom;
+        }
+      id += nivelZoom == 0 ? i % 2 : nivelZoom;
+    }
+}
+
+void
+Pintor::pintarMenosBandas(int x, int y, int height, int width)
+{
+  int capaRoja = falsoColor.rojo;
+  int capaVerde = falsoColor.verde;
+  int capaAzul = falsoColor.azul;
+  Glib::RefPtr<Gdk::GC> refGC1 = Gdk::GC::create(dibujo->get_window());
+  Gdk::Color color;
+  int id = desplazamientoY + y;
+  for (int i = y; i < height; i++)
+    {
+      int iid = desplazamientoX + x;
+      for (int ii = x; ii < width; ii++)
+        {
+
+          if (capaRoja >= 0)
+            {
+              Banda* c = imagen->vectorBanda[capaRoja];
+              color.set_red(c->matriz[id][iid] * 255);
+            }
+          if (capaVerde >= 0)
+            {
+              Banda* c = imagen->vectorBanda[capaVerde];
+              color.set_green(c->matriz[id][iid] * 255);
+            }
+          if (capaAzul >= 0)
+            {
+              Banda* c = imagen->vectorBanda[capaAzul];
+              color.set_blue(c->matriz[id][iid] * 255);
+            }
+
+          refGC1->set_rgb_fg_color(color);
+          dibujo->get_window()->draw_point(refGC1, ii, i);
+          iid += nivelZoom == 0 ? ii % 2 : nivelZoom;
+        }
+      id += nivelZoom == 0 ? i % 2 : nivelZoom;
+    }
+}
+
+void
+Pintor::pintarMenosBandasRangoAcotado(int x, int y, int height, int width)
+{
+  int minRojo = this->minRojo;
+  int minVerde = this->minVerde;
+  int minAzul = this->minAzul;
+  int maxRojo = this->maxRojo;
+  int maxVerde = this->maxVerde;
+  int maxAzul = this->maxAzul;
+  int capaRoja = falsoColor.rojo;
+  int capaVerde = falsoColor.verde;
+  int capaAzul = falsoColor.azul;
+  Glib::RefPtr<Gdk::GC> refGC1 = Gdk::GC::create(dibujo->get_window());
+  Gdk::Color color;
+  int id = desplazamientoY + y;
+  for (int i = y; i < height; i++)
+    {
+      int iid = desplazamientoX + x;
+      for (int ii = x; ii < width; ii++)
+        {
+
+          if (capaRoja >= 0)
+            {
+              Banda* c = imagen->vectorBanda[capaRoja];
+              color.set_red((c->matriz[id][iid] < maxRojo && c->matriz[id][iid]
+                  > minRojo) ? c->matriz[id][iid] * 255 : 0);
+            }
+          if (capaVerde >= 0)
+            {
+              Banda* c = imagen->vectorBanda[capaVerde];
+              color.set_green((c->matriz[id][iid] < maxVerde
+                  && c->matriz[id][iid] > minVerde) ? c->matriz[id][iid] * 255
+                  : 0);
+            }
+          if (capaAzul >= 0)
+            {
+              Banda* c = imagen->vectorBanda[capaAzul];
+              color.set_blue((c->matriz[id][iid] < maxAzul
+                  && c->matriz[id][iid] > minAzul) ? c->matriz[id][iid] * 255
+                  : 0);
+            }
+
+          refGC1->set_rgb_fg_color(color);
+          dibujo->get_window()->draw_point(refGC1, ii, i);
+          iid += nivelZoom == 0 ? ii % 2 : nivelZoom;
+        }
+      id += nivelZoom == 0 ? i % 2 : nivelZoom;
+    }
 }
 
 Pintor::~Pintor()

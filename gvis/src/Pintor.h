@@ -33,6 +33,12 @@ public:
     int rojo, verde, azul;
   };
   TFalsoColor falsoColor;
+  int minRojo;
+  int minVerde;
+  int minAzul;
+  int maxRojo;
+  int maxVerde;
+  int maxAzul;
   int desplazamientoX, desplazamientoY;
   int nivelZoom;
   Pintor(Gtk::DrawingArea* dibu);
@@ -55,6 +61,15 @@ public:
 private:
   Gtk::DrawingArea* dibujo;
   Imagen* imagen;
+  void
+  pintarTresBandas(int x, int y, int height, int width);
+  void
+  pintarMenosBandas(int x, int y, int height, int width);
+  void
+  pintarTresBandasRangoAcotado(int x, int y, int height, int width);
+  void
+  pintarMenosBandasRangoAcotado(int x, int y, int height, int width);
+
 };
 
 #endif /* PINTOR_H_ */
