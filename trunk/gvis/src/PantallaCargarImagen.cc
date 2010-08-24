@@ -40,7 +40,6 @@ PantallaCargarImagen::PantallaCargarImagen() :
       &PantallaCargarImagen::on_cancelar_clik));
   ventana->signal_show().connect(sigc::mem_fun(*this,
       &PantallaCargarImagen::on_ventana_show));
-
 }
 
 void
