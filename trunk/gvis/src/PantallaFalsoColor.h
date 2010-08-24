@@ -45,6 +45,12 @@ public:
   Gtk::ComboBox* falsoColorRojo;
   Gtk::ComboBox* falsoColorVerde;
   Gtk::ComboBox* falsoColorAzul;
+  Gtk::SpinButton* minRojo;
+  Gtk::SpinButton* minVerde;
+  Gtk::SpinButton* minAzul;
+  Gtk::SpinButton* maxRojo;
+  Gtk::SpinButton* maxVerde;
+  Gtk::SpinButton* maxAzul;
   Imagen* imagen;
   Pintor* pintor;
   Glib::RefPtr<Gtk::ListStore> rojo_refListStore;

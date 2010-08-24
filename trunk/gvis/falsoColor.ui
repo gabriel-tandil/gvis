@@ -18,6 +18,27 @@
           </packing>
         </child>
         <child>
+          <object class="GtkHBox" id="hbox4">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Rango Visibilidad</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <property name="homogeneous">True</property>
@@ -38,9 +59,29 @@
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkSpinButton" id="minRojo">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="maxRojo">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -64,9 +105,29 @@
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkSpinButton" id="minVerde">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="maxVerde">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -90,9 +151,29 @@
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkSpinButton" id="minAzul">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="maxAzul">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child>
@@ -129,7 +210,7 @@
             </child>
           </object>
           <packing>
-            <property name="position">4</property>
+            <property name="position">5</property>
           </packing>
         </child>
       </object>
