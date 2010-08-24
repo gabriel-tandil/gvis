@@ -37,6 +37,8 @@ Imagen::Imagen(Glib::ustring archivoCab)
       Banda* c = new Banda(cabecera->getBandasPresentes().substr(i, 1), false,
           this);
       vectorBanda.push_back(c);
+      maxB.push_back(255.0);
+      minB.push_back(0);
     }
 }
 
@@ -55,12 +57,12 @@ Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
 
   gfloat maxAj = MINFLOAT;
   gfloat minAj = MAXFLOAT;
-  std::vector<gfloat> maxB;
-  std::vector<gfloat> minB;
+  maxB.clear();
+  minB.clear();
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
-        gfloat maxBanda = 255 * cabecera->gainBias[i].gain
+        gfloat maxBanda = 255.0 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
         gfloat minBanda = cabecera->gainBias[i].bias;
         g_print("Banda %i maximo: %f minimo: %f\n", i + 1, maxBanda, minBanda);
@@ -80,8 +82,8 @@ Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
 
   g_print("Todas las Bandas maximo: %f minimo: %f\n", maxAj, minAj);
   // calculo un gain y un bias para normalizar a 255
-  gfloat bNorm = 255 / (1 - (maxAj / minAj));
-  gfloat gNorm = (255 - bNorm) / maxAj;
+  gfloat bNorm = 255.0 / (1 - (maxAj / minAj));
+  gfloat gNorm = (255.0 - bNorm) / maxAj;
 
   //  g_print("max: %f min: %f \n", (max,min,gc,bc);
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
@@ -90,8 +92,8 @@ Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
         {
           if (ajustarRangoDinamicoPorBanda)
             {
-              bNorm = 255 / (1 - (maxB[i] / minB[i]));
-              gNorm = (255 - bNorm) / maxB[i];
+              bNorm = 255.0 / (1 - (maxB[i] / minB[i]));
+              gNorm = (255.0- bNorm) / maxB[i];
             }
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
           gfloat bAjustado = cabecera->gainBias[i].bias * gNorm + bNorm;
@@ -139,16 +141,15 @@ Imagen::corregirRHO(bool ajustarRangoDinamicoPorBanda)
   g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas, cosenoMenos);
   g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas, faseMenos);
 
-  std::vector<gfloat> maxB;
-  std::vector<gfloat> minB;
-
+  maxB.clear();
+  minB.clear();
   gfloat maxAj = MINFLOAT;
   gfloat minAj = MAXFLOAT;
 
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
-        gfloat maxBanda = 255 * cabecera->gainBias[i].gain
+        gfloat maxBanda = 255.0 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
         maxBanda = (d * d * PI * (maxBanda)) / (cos(titaSol)
             * cabecera->solct[i]);
@@ -172,8 +173,8 @@ Imagen::corregirRHO(bool ajustarRangoDinamicoPorBanda)
       }
   g_print("Todas las Bandas maximo: %f minimo: %f\n", maxAj, minAj);
   // calculo un gain y un bias para normalizar a 255
-  gfloat bNorm = -((255 * minAj) / (maxAj - minAj));
-  gfloat gNorm = 255 / (maxAj - minAj);
+  gfloat bNorm = -((255.0 * minAj) / (maxAj - minAj));
+  gfloat gNorm = 255.0 / (maxAj - minAj);
 
   //  g_print("max: %f min: %f \n", (max,min,gc,bc);
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
@@ -183,12 +184,12 @@ Imagen::corregirRHO(bool ajustarRangoDinamicoPorBanda)
           if (ajustarRangoDinamicoPorBanda)
             {
               // calculo un gain y un bias para normalizar a 255
-              bNorm = -((255 * minB[i]) / (maxB[i] - minB[i]));
-              gNorm = 255 / (maxB[i] - minB[i]);
+              bNorm = -((255.0 * minB[i]) / (maxB[i] - minB[i]));
+              gNorm = 255.0 / (maxB[i] - minB[i]);
             }
 
           gfloat bRef = minB[i];
-          gfloat gRef = (maxB[i] - minB[i]) / 255;
+          gfloat gRef = (maxB[i] - minB[i]) / 255.0;
 
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
           gfloat bAjustado = bRef * gNorm + bNorm;
@@ -235,8 +236,8 @@ Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
   g_print("Coseno Mas: %f Coseno Menos: %f  \n", cosenoMas, cosenoMenos);
   g_print("Fase Mas: %f Fase Menos: %f  \n", faseMas, faseMenos);
 
-  std::vector<gfloat> maxB;
-  std::vector<gfloat> minB;
+  maxB.clear();
+  minB.clear();
 
   gfloat maxAj = MINFLOAT;
   gfloat minAj = MAXFLOAT;
@@ -249,7 +250,7 @@ Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
             -cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
         g_print("LR Banda %i: %f\n", i + 1, lr);
 
-        gfloat maxBanda = 255 * cabecera->gainBias[i].gain
+        gfloat maxBanda = 255.0 * cabecera->gainBias[i].gain
             + cabecera->gainBias[i].bias;
         maxBanda = (d * d * PI * (maxBanda - lr)) / (cos(titaSol)
             * cabecera->solct[i]);
@@ -273,8 +274,8 @@ Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
       }
   g_print("Todas las Bandas maximo: %f minimo: %f\n", maxAj, minAj);
   // calculo un gain y un bias para normalizar a 255
-  gfloat bNorm = -((255 * minAj) / (maxAj - minAj));
-  gfloat gNorm = 255 / (maxAj - minAj);
+  gfloat bNorm = -((255.0 * minAj) / (maxAj - minAj));
+  gfloat gNorm = 255.0 / (maxAj - minAj);
 
   //  g_print("max: %f min: %f \n", (max,min,gc,bc);
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
@@ -284,12 +285,12 @@ Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
           if (ajustarRangoDinamicoPorBanda)
             {
               // calculo un gain y un bias para normalizar a 255
-              bNorm = -((255 * minB[i]) / (maxB[i] - minB[i]));
-              gNorm = 255 / (maxB[i] - minB[i]);
+              bNorm = -((255.0 * minB[i]) / (maxB[i] - minB[i]));
+              gNorm = 255.0 / (maxB[i] - minB[i]);
             }
 
           gfloat bRai = minB[i];
-          gfloat gRai = (maxB[i] - minB[i]) / 255;
+          gfloat gRai = (maxB[i] - minB[i]) / 255.0;
 
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
           gfloat bAjustado = bRai * gNorm + bNorm;

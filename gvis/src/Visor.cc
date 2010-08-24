@@ -184,9 +184,9 @@ Visor::on_dibujo_Apreta(GdkEventButton* evento)
         }
       actualizaFirmaEspectral(evento->x, evento->y);
       ventanaFirmaEspectral->show();
-      int x,y;
-      ventanaFirmaEspectral->get_position(x,y);
-      ventanaFirmaEspectral->move(x+200,y);
+      int x, y;
+      ventanaFirmaEspectral->get_position(x, y);
+      ventanaFirmaEspectral->move(x + 200, y);
     }
   return true;
 }
@@ -195,7 +195,10 @@ bool
 Visor::on_dibujo_Suelta(GdkEventButton* evento)
 {
   if (evento->button == 1)
-    ventanaFirmaEspectral->hide();
+    {
+      ventanaFirmaEspectral->hide();
+      actualizarBarraEstado();
+    }
   return true;
 }
 
@@ -205,20 +208,19 @@ Visor::actualizaFirmaEspectral(int ex, int ey)
   Gtk::Curve* firmaEspectral;
   builder->get_widget("firmaEspectral", firmaEspectral);
   std::vector<float> temp;
-  int cuenta = 0;
   if (imagen != NULL)
     {
       for (unsigned int i = 0; i < imagen->vectorBanda.size(); i++)
         if (imagen->vectorBanda[i]->cargada)
 
           {
-            cuenta++;
             gfloat nivelZoomAjustado = nivelZoom == 0 ? 0.5 : nivelZoom;
             Banda* c = imagen->vectorBanda[i];
             int y = scrollVertical->get_adjustment()->get_value() + ey
                 * nivelZoomAjustado;
             int x = scrollHorizontal->get_adjustment()->get_value() + ex
                 * nivelZoomAjustado;
+            actualizarBarraEstado(x, y);
             temp.push_back(c->matriz[y][x]);
           }
     }
@@ -242,8 +244,10 @@ Visor::on_salir_clik()
 }
 
 void
-Visor::actualizarBarraEstado()
+Visor::actualizarBarraEstado(int x, int y)
 {
+  statusBar->pop(1);
+  statusBar->pop(2);
   gchar* msg;
   if (nivelZoom == 1)
     msg = g_strdup_printf("Nivel de Zoom: x 1");
@@ -252,8 +256,21 @@ Visor::actualizarBarraEstado()
   else
     msg = g_strdup_printf("Nivel de Zoom: x 1/%d", nivelZoom);
 
-  statusBar->pop();
-  statusBar->push(msg);
+  statusBar->push(msg, 1);
+  if (x != -1)
+    {
+      msg = g_strdup_printf("x: %d y: %d", x, y);
+      for (unsigned int i = 0; i < imagen->vectorBanda.size(); i++)
+        if (imagen->vectorBanda[i]->cargada)
+          {
+            Banda* c = imagen->vectorBanda[i];
+            msg = g_strdup_printf("%s banda %d valor: %f valor digital: %d",
+                msg, i + 1, ((c->matriz[y][x] / 255.0) * (imagen->maxB[i]
+                    - imagen->minB[i])) + imagen->minB[i], c->matriz[y][x]);
+
+          }
+      statusBar->push(msg, 2);
+    }
 }
 
 void
@@ -317,7 +334,7 @@ Visor::on_abrir_clik()
 
       configFalsoColor->set_sensitive(true);
       verCabecera->set_sensitive(true);
-
+      actualizarBarraEstado();
       //  dibujo->queue_draw();
     }
 

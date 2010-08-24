@@ -43,7 +43,8 @@ public:
   TVectorCapa vectorBanda;
   Cabecera* cabecera;
   gint8 tamanioBloque;
-
+  std::vector<gfloat> maxB;
+  std::vector<gfloat> minB;
 protected:
   Glib::ustring nombreArchivo;
 
