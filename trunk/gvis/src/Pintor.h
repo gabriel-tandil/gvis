@@ -41,6 +41,7 @@ public:
   int maxAzul;
   int desplazamientoX, desplazamientoY;
   int nivelZoom;
+  bool mostrarBordes;
   Pintor(Gtk::DrawingArea* dibu);
   bool
   on_dibujo_expose(GdkEventExpose* evento);
@@ -58,9 +59,13 @@ public:
   setDesplazamientoX(int desp);
   void
   setDesplazamientoY(int desp);
+  void
+  setMostrarBordes(bool mostrar);
 private:
   Gtk::DrawingArea* dibujo;
   Imagen* imagen;
+  void
+  dibujarBordes(int x, int y, int height, int width);
   void
   pintarTresBandas(int x, int y, int height, int width);
   void

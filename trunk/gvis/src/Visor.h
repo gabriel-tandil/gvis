@@ -40,8 +40,6 @@ public:
   virtual bool
   on_scrollVertical_change(Gtk::ScrollType st, double v);
   virtual void
-  on_ventana_show();
-  virtual void
   on_abrir_clik();
   virtual void
   on_acercar_clik();
@@ -63,13 +61,15 @@ public:
   on_key_press(GdkEventKey* evento);
   virtual void
   on_dibujo_cambia_tamanio(Gtk::Allocation rec);
-  Gtk::Menu* menuEmergenteDibujo;
+  virtual void
+  on_mostrarBordes_clik();
   Gtk::ImageMenuItem* abrir;
   Gtk::ImageMenuItem* verCabecera;
   Gtk::ImageMenuItem* configFalsoColor;
   Gtk::ImageMenuItem* salir;
   Gtk::ImageMenuItem* acercar;
   Gtk::ImageMenuItem* alejar;
+  Gtk::CheckMenuItem* mostrarBordes;
   Gtk::Window* seleccionCapas;
   Gtk::VScrollbar* scrollVertical;
   Gtk::HScrollbar* scrollHorizontal;
@@ -89,7 +89,7 @@ private:
   void
   ajustarMaximoDesplazamiento();
   void
-  actualizarBarraEstado(int x=-1, int y=-1);
+  actualizarBarraEstado(int x = -1, int y = -1);
   void
   acercarZoom();
   void
