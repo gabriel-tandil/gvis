@@ -94,7 +94,9 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
       g_print("Redibujando %i,%i->%i,%i\n", evento->area.x, evento->area.y,
           evento->area.x + evento->area.width, evento->area.y
               + evento->area.height);
-
+      if (mostrarBordes)
+        dibujarBordes(evento->area.x, evento->area.y, evento->area.height,
+            evento->area.width);
     }
   return false;
 }
@@ -111,12 +113,59 @@ Pintor::setDesplazamientoY(int desp)
 }
 
 void
+Pintor::setMostrarBordes(bool mostrar)
+{
+  mostrarBordes = mostrar;
+}
+
+void
 Pintor::reset()
 {
   imagen = NULL;
   falsoColor.rojo = -1;
   falsoColor.verde = -1;
   falsoColor.azul = -1;
+}
+
+void
+Pintor::dibujarBordes(int x, int y, int height, int width)
+{
+  Glib::RefPtr<Gdk::GC> refGC1 = Gdk::GC::create(dibujo->get_window());
+  Gdk::Color color;
+  color.set_red(255 * 255);
+  color.set_green(255 * 255);
+  color.set_blue(255 * 255);
+  int id = desplazamientoY + y+1;
+  for (int i = y+1; i < height-1; i++)
+    {
+      int iid = desplazamientoX + x+1;
+      for (int ii = x+1; ii < width-1; ii++)
+        {
+          bool pinta = false;
+          for (unsigned int iii = 0; iii < imagen->vectorBanda.size(); iii++)
+            if (imagen->vectorBanda[iii]->cargada)
+              {
+                Banda* c = imagen->vectorBanda[iii];
+                int valor = (abs((c->matriz[id - 1][iid - 1] + 2 * c->matriz[id
+                    - 1][iid] + c->matriz[id - 1][iid + 1])
+                    - (c->matriz[id + 1][iid - 1] + 2 * c->matriz[id + 1][iid]
+                        + c->matriz[id + 1][iid + 1])) + abs(
+                    (c->matriz[id - 1][iid + 1] + 2 * c->matriz[id][iid + 1]
+                        + c->matriz[id + 1][iid + 1]) - (c->matriz[id - 1][iid
+                        - 1] + 2 * c->matriz[id][iid - 1]
+                        + c->matriz[id + 1][iid - 1]))) / 6;
+                if (valor > 10)
+                  pinta = true;
+              }
+          if (pinta)
+            {
+              refGC1->set_rgb_fg_color(color);
+              dibujo->get_window()->draw_point(refGC1, ii, i);
+            }
+          iid += nivelZoom == 0 ? ii % 2 : nivelZoom;
+        }
+      id += nivelZoom == 0 ? i % 2 : nivelZoom;
+    }
 }
 
 void

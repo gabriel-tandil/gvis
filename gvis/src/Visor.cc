@@ -26,6 +26,7 @@ Visor::Visor() :
   nivelZoom = 1;
   imagen = NULL;
   etiquetasBandas = NULL;
+  builder->get_widget("mostrarBordes", mostrarBordes);
   builder->get_widget("scrollHorizontal", scrollHorizontal);
   builder->get_widget("scrollVertical", scrollVertical);
   builder->get_widget("dibujo", dibujo);
@@ -38,15 +39,13 @@ Visor::Visor() :
   builder->get_widget("ventanaCabecera", ventanaCabecera);
   builder->get_widget("ventanaFirmaEspectral", ventanaFirmaEspectral);
   builder->get_widget("statusBar", statusBar);
-
-  //   builder->get_widget("menuEmergenteDibujo",menuEmergenteDibujo);
   pintorPrincipal = new Pintor(dibujo);
-
+  mostrarBordes->signal_activate().connect(sigc::mem_fun(*this,
+      &Visor::on_mostrarBordes_clik));
   scrollHorizontal->signal_change_value().connect(sigc::mem_fun(*this,
       &Visor::on_scrollHorizontal_change));
   scrollVertical->signal_change_value().connect(sigc::mem_fun(*this,
       &Visor::on_scrollVertical_change));
-  ventana->signal_show().connect(sigc::mem_fun(*this, &Visor::on_ventana_show));
   ventana->signal_key_press_event().connect(sigc::mem_fun(*this,
       &Visor::on_key_press));
   abrir->signal_activate().connect(sigc::mem_fun(*this, &Visor::on_abrir_clik));
@@ -79,12 +78,14 @@ Visor::Visor() :
   scrollVertical->get_adjustment()->set_page_size(200);
   scrollVertical->get_adjustment()->set_step_increment(50);
   scrollVertical->get_adjustment()->set_lower(0);
+
 }
 
 void
-Visor::on_ventana_show()
+Visor::on_mostrarBordes_clik()
 {
-
+  pintorPrincipal->setMostrarBordes(mostrarBordes->get_active());
+  dibujo->queue_draw();
 }
 
 bool
@@ -335,7 +336,6 @@ Visor::on_abrir_clik()
       configFalsoColor->set_sensitive(true);
       verCabecera->set_sensitive(true);
       actualizarBarraEstado();
-      //  dibujo->queue_draw();
     }
 
 }

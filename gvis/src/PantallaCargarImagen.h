@@ -25,7 +25,6 @@
 #include "util/Imagen.h"
 #include "Controlador.h"
 
-
 class PantallaCargarImagen : public Controlador
   {
 public:
@@ -52,7 +51,6 @@ public:
   Glib::RefPtr<Gtk::ListStore> m_refListStore;
   void add_columns();
   void liststore_add_item(const Banda* foo);
-
   struct ModelColumns : public Gtk::TreeModel::ColumnRecord
     {
     Gtk::TreeModelColumn<bool> cargada;
