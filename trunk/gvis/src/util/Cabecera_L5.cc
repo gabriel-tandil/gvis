@@ -28,6 +28,8 @@ Cabecera_L5::Cabecera_L5() :
   solct.push_back(1557);
   solct.push_back(1047);
   solct.push_back(219.3);
+  solct.push_back(100); //valor arbitrario para poder mostrarla junto a  las demas bandas corregidas
+  solct.push_back(83.4);
 
   taur.push_back(0.1543);
   taur.push_back(0.0812);

@@ -20,9 +20,10 @@
 
 #include "Imagen.h"
 #include <math.h>
-#include <values.h>
 
 #define PI 3.14159265
+#define MINFLOAT -8.98846567431105E+37
+#define MAXFLOAT +8.98846567431105E+37
 
 Imagen::Imagen(Glib::ustring archivoCab)
 {
@@ -93,7 +94,7 @@ Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
           if (ajustarRangoDinamicoPorBanda)
             {
               bNorm = 255.0 / (1 - (maxB[i] / minB[i]));
-              gNorm = (255.0- bNorm) / maxB[i];
+              gNorm = (255.0 - bNorm) / maxB[i];
             }
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
           gfloat bAjustado = cabecera->gainBias[i].bias * gNorm + bNorm;
@@ -245,9 +246,14 @@ Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
   for (unsigned int i = 0; i < vectorBanda.size(); i++)
     if (vectorBanda[i]->cargada)
       {
-        gfloat lr = ((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d * d
-            * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat))) * (exp(
-            -cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052 * faseMas);
+        gfloat lr = 0;
+        if (cabecera->taur.size() > i)
+          {
+            lr = ((cabecera->solct[i] * cabecera->taur[i]) / (4 * PI * d * d
+                * cos(titaSat))) * (exp(-cabecera->taug[i] / cos(titaSat)))
+                * (exp(-cabecera->taug[i] / cos(titaSol))) * (faseMenos + 0.052
+                * faseMas);
+          }
         g_print("LR Banda %i: %f\n", i + 1, lr);
 
         gfloat maxBanda = 255.0 * cabecera->gainBias[i].gain
@@ -309,12 +315,11 @@ Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
 Glib::ustring
 Imagen::getDirectorio()
 {
-  Glib::ustring::size_type inicio = nombreArchivo.length();
+  Glib::ustring::size_type inicio;
+  inicio = nombreArchivo.rfind("\\", nombreArchivo.length()) + 1;
 
-  inicio = nombreArchivo.rfind("/", inicio) + 1;
-
-  if (inicio - 1 == nombreArchivo.length())
-    inicio = nombreArchivo.rfind("\\", inicio) + 1;
+  if (inicio  == 0)
+    inicio = nombreArchivo.rfind("/", nombreArchivo.length()) + 1;
   Glib::ustring cadena = nombreArchivo.substr(0, inicio);
 
   return cadena;
