@@ -39,6 +39,11 @@ Visor::Visor() :
   builder->get_widget("ventanaCabecera", ventanaCabecera);
   builder->get_widget("ventanaFirmaEspectral", ventanaFirmaEspectral);
   builder->get_widget("statusBar", statusBar);
+
+  Gdk::Color color; //hago el area de dibujo negra
+  color.parse("black");
+  dibujo->modify_bg(Gtk::STATE_NORMAL,color);
+
   pintorPrincipal = new Pintor(dibujo);
   mostrarBordes->signal_activate().connect(sigc::mem_fun(*this,
       &Visor::on_mostrarBordes_clik));
