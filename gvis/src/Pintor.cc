@@ -35,6 +35,7 @@ Pintor::Pintor(Gtk::DrawingArea* dibu)
   maxRojo = 255;
   maxVerde = 255;
   maxAzul = 255;
+  mostrarBordes = false;
 }
 
 void
@@ -61,6 +62,11 @@ Pintor::on_dibujo_expose(GdkEventExpose* evento)
 
   if (imagen != NULL)
     {
+      if (falsoColor.rojo == -1 && falsoColor.verde == -1 && falsoColor.azul
+          == -1)
+        {
+        }
+      else
       if (falsoColor.rojo >= 0 && falsoColor.verde >= 0 && falsoColor.azul >= 0)
         {
           if (minAzul == 0 && maxAzul == 255 && minRojo == 0 && maxRojo == 255
@@ -135,11 +141,11 @@ Pintor::dibujarBordes(int x, int y, int height, int width)
   color.set_red(255 * 255);
   color.set_green(255 * 255);
   color.set_blue(255 * 255);
-  int id = desplazamientoY + y+1;
-  for (int i = y+1; i < height-1; i++)
+  int id = desplazamientoY + y + 1;
+  for (int i = y + 1; i < height - 1; i++)
     {
-      int iid = desplazamientoX + x+1;
-      for (int ii = x+1; ii < width-1; ii++)
+      int iid = desplazamientoX + x + 1;
+      for (int ii = x + 1; ii < width - 1; ii++)
         {
           bool pinta = false;
           for (unsigned int iii = 0; iii < imagen->vectorBanda.size(); iii++)

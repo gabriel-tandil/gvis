@@ -119,7 +119,6 @@
         </child>
         <child>
           <object class="GtkHButtonBox" id="hbuttonbox3">
-            <property name="visible">True</property>
             <property name="homogeneous">True</property>
             <property name="layout_style">spread</property>
             <child>
