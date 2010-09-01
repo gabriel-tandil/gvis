@@ -53,7 +53,7 @@ Imagen::cargarBandas()
 }
 
 void
-Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
+Imagen::corregirL()
 {
 
   gfloat maxAj = MINFLOAT;
@@ -91,11 +91,6 @@ Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
     {
       if (vectorBanda[i]->cargada)
         {
-          if (ajustarRangoDinamicoPorBanda)
-            {
-              bNorm = 255.0 / (1 - (maxB[i] / minB[i]));
-              gNorm = (255.0 - bNorm) / maxB[i];
-            }
           //calculo nuevos b y g para ajustar la luminancia y normalizar en un solo paso
           gfloat bAjustado = cabecera->gainBias[i].bias * gNorm + bNorm;
           gfloat gAjustado = (cabecera->gainBias[i].gain
@@ -112,7 +107,7 @@ Imagen::corregirL(bool ajustarRangoDinamicoPorBanda)
 }
 
 void
-Imagen::corregirRHO(bool ajustarRangoDinamicoPorBanda)
+Imagen::corregirRHO()
 {
 
   gdouble d = 1 - 0.0167 * cos((2 * PI
@@ -182,13 +177,6 @@ Imagen::corregirRHO(bool ajustarRangoDinamicoPorBanda)
     {
       if (vectorBanda[i]->cargada)
         {
-          if (ajustarRangoDinamicoPorBanda)
-            {
-              // calculo un gain y un bias para normalizar a 255
-              bNorm = -((255.0 * minB[i]) / (maxB[i] - minB[i]));
-              gNorm = 255.0 / (maxB[i] - minB[i]);
-            }
-
           gfloat bRef = minB[i];
           gfloat gRef = (maxB[i] - minB[i]) / 255.0;
 
@@ -207,7 +195,7 @@ Imagen::corregirRHO(bool ajustarRangoDinamicoPorBanda)
 }
 
 void
-Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
+Imagen::corregirRHOR()
 {
 
   gdouble d = 1 - 0.0167 * cos((2 * PI
@@ -288,13 +276,6 @@ Imagen::corregirRHOR(bool ajustarRangoDinamicoPorBanda)
     {
       if (vectorBanda[i]->cargada)
         {
-          if (ajustarRangoDinamicoPorBanda)
-            {
-              // calculo un gain y un bias para normalizar a 255
-              bNorm = -((255.0 * minB[i]) / (maxB[i] - minB[i]));
-              gNorm = 255.0 / (maxB[i] - minB[i]);
-            }
-
           gfloat bRai = minB[i];
           gfloat gRai = (maxB[i] - minB[i]) / 255.0;
 

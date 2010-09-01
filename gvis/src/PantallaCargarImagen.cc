@@ -32,8 +32,6 @@ PantallaCargarImagen::PantallaCargarImagen() :
   builder->get_widget("L", l);
   builder->get_widget("RHO", rho);
   builder->get_widget("RHOR", rhor);
-  builder->get_widget("ajustarPorBanda", ajustarPorBanda);
-  builder->get_widget("ajustarPorImagen", ajustarPorImagen);
   aceptar->signal_clicked().connect(sigc::mem_fun(*this,
       &PantallaCargarImagen::on_aceptar_clik));
   cancelar->signal_clicked().connect(sigc::mem_fun(*this,
@@ -74,11 +72,11 @@ PantallaCargarImagen::on_aceptar_clik()
 
   imagen->cargarBandas();
   if (l->get_active())
-    imagen->corregirL(ajustarPorBanda->get_active());
+    imagen->corregirL();
   if (rho->get_active())
-    imagen->corregirRHO(ajustarPorBanda->get_active());
+    imagen->corregirRHO();
   if (rhor->get_active())
-    imagen->corregirRHOR(ajustarPorBanda->get_active());
+    imagen->corregirRHOR();
 
   ventana->hide();
 }
