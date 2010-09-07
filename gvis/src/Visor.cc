@@ -331,6 +331,7 @@ Visor::on_abrir_clik()
         {
           delete imagen;
           pintorPrincipal->reset();
+          pantallaFalsoColor->reset();
         }
       imagen = new Imagen(dialog.get_filename());
       pantallaCargarImagen->mostrar(imagen);

@@ -26,20 +26,29 @@
 #include "Pintor.h"
 #include "Controlador.h"
 
-
-class PantallaFalsoColor: public Controlador
-  {
+class PantallaFalsoColor : public Controlador
+{
 public:
 
   PantallaFalsoColor();
-  virtual ~PantallaFalsoColor();
-  virtual void on_ventana_show();
-  virtual void on_aceptar_falsoColor_clik();
-  virtual void on_cancelar_falsoColor_clik();
-  void armarCombos();
-  void combo_add_item(const Banda* capa);
-  void mostrar(Pintor*p, Imagen* imagen);
-  Glib::ustring get_active_text(Gtk::ComboBox* combo) const;
+  virtual
+  ~PantallaFalsoColor();
+  virtual void
+  on_ventana_show();
+  virtual void
+  on_aceptar_falsoColor_clik();
+  virtual void
+  on_cancelar_falsoColor_clik();
+  void
+  armarCombos();
+  void
+  combo_add_item(const Banda* capa);
+  void
+  mostrar(Pintor*p, Imagen* imagen);
+  void
+  reset();
+  Glib::ustring
+  get_active_text(Gtk::ComboBox* combo) const;
   Gtk::Button* aceptar_falsoColor;
   Gtk::Button* cancelar_falsoColor;
   Gtk::ComboBox* falsoColorRojo;
@@ -58,21 +67,21 @@ public:
   Glib::RefPtr<Gtk::ListStore> azul_refListStore;
 protected:
 
-    //Tree model columns:
-    //These columns are used by the model that is created by the default constructor
+  //Tree model columns:
+  //These columns are used by the model that is created by the default constructor
 
 
   struct TextModelColumns : public Gtk::TreeModel::ColumnRecord
-        {
-          Gtk::TreeModelColumn<Glib::ustring> nombre;
-          TextModelColumns()
-            {
-              add(nombre);
-            }
-        };
-
-    TextModelColumns m_text_columns;
-
+  {
+    Gtk::TreeModelColumn<Glib::ustring> nombre;
+    TextModelColumns()
+    {
+      add(nombre);
+    }
   };
+
+  TextModelColumns m_text_columns;
+
+};
 
 #endif /*PantallaFalsoColor_H_*/
