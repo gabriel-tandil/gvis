@@ -25,6 +25,7 @@
 PantallaFalsoColor::PantallaFalsoColor() :
   Controlador("falsoColor")
 {
+  imagen = NULL;
   builder->get_widget("falsoColorRojo", falsoColorRojo);
   builder->get_widget("falsoColorVerde", falsoColorVerde);
   builder->get_widget("falsoColorAzul", falsoColorAzul);
@@ -37,20 +38,20 @@ PantallaFalsoColor::PantallaFalsoColor() :
   builder->get_widget("maxVerde", maxVerde);
   builder->get_widget("maxAzul", maxAzul);
   maxRojo->set_range(0, 255);
-  maxRojo->set_increments(1,5);
+  maxRojo->set_increments(1, 5);
   maxRojo->set_value(255);
   maxVerde->set_range(0, 255);
-  maxVerde->set_increments(1,5);
+  maxVerde->set_increments(1, 5);
   maxVerde->set_value(255);
   maxAzul->set_range(0, 255);
-  maxAzul->set_increments(1,5);
+  maxAzul->set_increments(1, 5);
   maxAzul->set_value(255);
   minRojo->set_range(0, 255);
-  minRojo->set_increments(1,5);
+  minRojo->set_increments(1, 5);
   minVerde->set_range(0, 255);
-  minVerde->set_increments(1,5);
+  minVerde->set_increments(1, 5);
   minAzul->set_range(0, 255);
-  minAzul->set_increments(1,5);
+  minAzul->set_increments(1, 5);
   aceptar_falsoColor->signal_clicked().connect(sigc::mem_fun(*this,
       &PantallaFalsoColor::on_aceptar_falsoColor_clik));
   cancelar_falsoColor->signal_clicked().connect(sigc::mem_fun(*this,
@@ -73,10 +74,18 @@ void
 PantallaFalsoColor::mostrar(Pintor* p, Imagen*i)
 {
   pintor = p;
-  imagen = i;
-  armarCombos();
-
+  if (imagen == NULL){
+    imagen = i;
+    armarCombos();
+  }
   ventana->show();
+}
+
+void
+PantallaFalsoColor::reset()
+{
+  imagen = NULL;
+  pintor = NULL;
 }
 
 void
@@ -94,12 +103,12 @@ PantallaFalsoColor::on_aceptar_falsoColor_clik()
       falsoColorVerde));
   pintor->falsoColor.azul = imagen->obtenerNumeroBanda(get_active_text(
       falsoColorAzul));
-  pintor->minRojo=minRojo->get_value_as_int();
-  pintor->maxRojo=maxRojo->get_value_as_int();
-  pintor->minVerde=minVerde->get_value_as_int();
-  pintor->maxVerde=maxVerde->get_value_as_int();
-  pintor->minAzul=minAzul->get_value_as_int();
-  pintor->maxAzul=maxAzul->get_value_as_int();
+  pintor->minRojo = minRojo->get_value_as_int();
+  pintor->maxRojo = maxRojo->get_value_as_int();
+  pintor->minVerde = minVerde->get_value_as_int();
+  pintor->maxVerde = maxVerde->get_value_as_int();
+  pintor->minAzul = minAzul->get_value_as_int();
+  pintor->maxAzul = maxAzul->get_value_as_int();
 
   pintor->getDibujo()->queue_draw();
   ventana->hide();
